@@ -27,10 +27,10 @@
     background: var(--dark);
     color: var(--white);
     font-family: 'DM Sans', sans-serif;
-    font-size: 17px;
-    line-height: 1.8;
+    font-size: 16px;
+    line-height: 1.65;
     overflow-x: hidden;
-    cursor: none;
+    cursor: auto;
   }
 
   /* Custom cursor */
@@ -41,7 +41,7 @@
     position: fixed;
     pointer-events: none;
     z-index: 9999;
-    transition: transform 0.15s ease;
+    display: none;
     mix-blend-mode: screen;
   }
   .cursor-ring {
@@ -51,7 +51,7 @@
     position: fixed;
     pointer-events: none;
     z-index: 9998;
-    transition: all 0.25s ease;
+    display: none;
   }
 
   /* BG mesh */
@@ -135,14 +135,14 @@
   /* HERO */
   .hero {
     position: relative; z-index: 1;
-    min-height: 100vh;
+    min-height: 760px;
     display: flex; align-items: center;
-    padding: 10rem 7rem 6rem;
+    padding: 9rem max(5vw, 2rem) 6rem;
     overflow: hidden;
   }
 
   .hero-content {
-    max-width: 720px;
+    max-width: 650px;
     animation: fadeUp 0.9s ease both;
   }
 
@@ -168,11 +168,11 @@
 
   .hero h1 {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(3.2rem, 5.5vw, 5.5rem);
+    font-size: clamp(2.45rem, 4.2vw, 4.25rem);
     font-weight: 800;
     line-height: 1.08;
     letter-spacing: -0.03em;
-    margin-bottom: 2rem;
+    margin-bottom: 1.4rem;
   }
   .hero h1 .accent { color: var(--cyan); }
   .hero h1 .line2 {
@@ -184,11 +184,11 @@
   }
 
   .hero p {
-    font-size: 1.2rem;
+    font-size: 1.06rem;
     font-weight: 300;
     color: var(--gray);
-    line-height: 1.85;
-    margin-bottom: 3rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
     max-width: 580px;
   }
 
@@ -238,11 +238,10 @@
 
   /* Hero graphic */
   .hero-visual {
-    position: absolute;
-    right: -80px; top: 50%;
-    transform: translateY(-50%);
-    width: 560px; height: 560px;
-    animation: fadeIn 1.2s ease both 0.3s;
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    animation: fadeIn 1s ease both;
+    z-index: -1;
   }
 
   .shield-glow {
@@ -253,11 +252,24 @@
   }
 
   .hero-visual img {
-    position: relative; z-index: 1;
-    width: 100%;
-    filter: drop-shadow(0 0 40px rgba(0,196,204,0.3)) drop-shadow(0 0 80px rgba(0,196,204,0.15));
-    animation: float 6s ease-in-out infinite;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: none;
+    animation: none;
   }
+
+  .hero-visual::after {
+    content: ''; position: absolute; inset: 0; z-index: 2;
+    background: linear-gradient(90deg, rgba(6,14,36,.98) 0%, rgba(6,14,36,.92) 34%, rgba(6,14,36,.42) 68%, rgba(6,14,36,.18) 100%),
+                linear-gradient(0deg, var(--dark) 0%, transparent 28%);
+  }
+  .hero-content { position: relative; z-index: 3; }
+  .hero-visual .shield-glow, .hero-visual .orbit { display: none; }
+  .intro-company { display:grid; grid-template-columns:1fr 1fr; gap:3.5rem; align-items:center; }
+  .intro-company img { width:100%; border-radius:18px; border:1px solid var(--border); box-shadow:0 24px 70px rgba(0,0,0,.35); }
+  .intro-list { list-style:none; display:grid; gap:.85rem; margin-top:1.5rem; color:var(--gray); }
+  .intro-list li::before { content:'✓'; color:var(--cyan); margin-right:.75rem; font-weight:700; }
 
   /* Orbiting dots */
   .orbit {
@@ -331,7 +343,7 @@
 
   .section-title {
     font-family: 'Syne', sans-serif;
-    font-size: clamp(2.2rem, 3.5vw, 3.4rem);
+    font-size: clamp(1.85rem, 2.8vw, 2.75rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.12;
@@ -883,13 +895,15 @@
 
   /* Scroll reveal */
   .reveal {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    opacity: 1;
+    transform: none;
   }
   .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
   }
 
   @media (max-width: 1024px) {
@@ -901,6 +915,7 @@
     section { padding: 5rem 2.5rem; }
     .services-grid { grid-template-columns: 1fr; }
     .feature-split { grid-template-columns: 1fr; gap: 4rem; }
+    .intro-company { grid-template-columns:1fr; }
     .process-steps { grid-template-columns: 1fr; gap: 2rem; }
     .process-steps::before { display: none; }
     .industries-grid { grid-template-columns: repeat(2, 1fr); }
@@ -911,15 +926,13 @@
 </head>
 <body>
 
-<div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
 <div class="bg-mesh"></div>
 <div class="bg-grid"></div>
 
 <!-- NAV -->
 <nav>
   <a href="#" class="nav-logo">
-    <img src="/mnt/user-data/uploads/Crea_un_logo_202603181654.png" alt="FMV InfraSec">
+    <img src="assets/brand/logo-temporal.svg" alt="FMV InfraSec">
     <span class="nav-logo-text">FMV <span>InfraSec</span></span>
   </a>
   <ul class="nav-links">
@@ -936,12 +949,12 @@
   <div class="hero-content">
     <div class="hero-badge">Seguridad · Desarrollo · IA · Infraestructura</div>
     <h1>
-      Protegemos<br>
-      <span class="line2">lo que construimos.</span>
+      Tecnología segura<br>
+      <span class="line2">para empresas que avanzan.</span>
     </h1>
-    <p>Desde auditorías de ciberseguridad hasta desarrollo de software, automatización con IA y gestión de infraestructura tech. Somos el socio estratégico que tu empresa necesita para crecer de forma segura, inteligente y escalable.</p>
+    <p>Ayudamos a empresas a reducir riesgos, modernizar su infraestructura y construir soluciones digitales confiables. Integramos ciberseguridad, software, nube, automatización y acompañamiento técnico en un solo equipo.</p>
     <div class="hero-actions">
-      <a href="#contacto" class="btn-primary">Solicitar diagnóstico gratuito →</a>
+      <a href="portal-comercial.html" class="btn-primary">Solicitar asesoría →</a>
       <a href="#servicios" class="btn-ghost">Ver servicios</a>
     </div>
   </div>
@@ -950,29 +963,44 @@
     <div class="shield-glow"></div>
     <div class="orbit orbit-1"><div class="orbit-dot"></div></div>
     <div class="orbit orbit-2"><div class="orbit-dot"></div></div>
-    <img src="/mnt/user-data/uploads/Crea_un_logo_202603181654.png" alt="FMV InfraSec Shield">
+    <img src="assets/images/hero-ciberseguridad.png" alt="Equipo de FMV analizando infraestructura y ciberseguridad">
   </div>
 </section>
 
 <!-- STATS -->
 <div class="stats-bar">
   <div class="stat-item">
-    <div class="stat-num">200+</div>
-    <div class="stat-label">Clientes protegidos</div>
+    <div class="stat-num">01</div>
+    <div class="stat-label">Diagnóstico del contexto</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num">98%</div>
-    <div class="stat-label">Tasa de retención</div>
+    <div class="stat-num">02</div>
+    <div class="stat-label">Propuesta priorizada</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num">0</div>
-    <div class="stat-label">Brechas post-auditoría</div>
+    <div class="stat-num">03</div>
+    <div class="stat-label">Implementación segura</div>
   </div>
   <div class="stat-item">
-    <div class="stat-num">24/7</div>
-    <div class="stat-label">Monitoreo activo</div>
+    <div class="stat-num">04</div>
+    <div class="stat-label">Medición y mejora</div>
   </div>
 </div>
+
+<section class="intro-company">
+  <div class="reveal">
+    <p class="section-label">Quiénes somos</p>
+    <h2 class="section-title">Un aliado técnico para decisiones que no pueden fallar</h2>
+    <p class="section-sub">FMV InfraSec reúne capacidades de seguridad, desarrollo e infraestructura para resolver necesidades empresariales de principio a fin, con lenguaje claro y entregables verificables.</p>
+    <ul class="intro-list">
+      <li>Evaluamos riesgos y oportunidades antes de proponer tecnología.</li>
+      <li>Diseñamos soluciones ajustadas al tamaño y operación de cada empresa.</li>
+      <li>Entregamos documentación, acompañamiento y transferencia de conocimiento.</li>
+      <li>Centralizamos asesorías, cotizaciones, pagos y seguimiento comercial.</li>
+    </ul>
+  </div>
+  <img class="reveal" src="assets/images/equipo-consultoria.png" alt="Equipo especializado colaborando en una solución de ciberseguridad">
+</section>
 
 <!-- SERVICIOS -->
 <section id="servicios">
@@ -1422,9 +1450,9 @@
 <section class="cta-section" id="contacto">
   <p class="section-label">¿Listo para empezar?</p>
   <h2>Tu seguridad empieza<br>con una conversación</h2>
-  <p>Cuéntanos sobre tu empresa y te conectamos con el especialista adecuado. Sin compromisos, sin costos ocultos.</p>
+  <p>Cuéntanos sobre tu empresa, elige el producto o servicio que necesitas y te conectamos con el consultor adecuado. Sin compromisos, sin costos ocultos.</p>
   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-    <a href="/cdn-cgi/l/email-protection#a6c5c9c8d2c7c5d2c9e6c0cbd0cfc8c0d4c7d5c3c588c5c9cb" class="btn-primary">Escribir al equipo →</a>
+    <a href="portal-comercial.html" class="btn-primary">Agendar asesoría comercial →</a>
     <a href="tel:+57000000000" class="btn-ghost">📞 Llamar ahora</a>
   </div>
 </section>
@@ -1432,7 +1460,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">
-    <img src="/mnt/user-data/uploads/Crea_un_logo_202603181654.png" alt="FMV InfraSec">
+    <img src="assets/brand/logo-temporal.svg" alt="FMV InfraSec">
     <span class="footer-brand">FMV InfraSec</span>
   </div>
   <ul class="footer-links">
@@ -1445,43 +1473,9 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-  // Custom cursor
-  const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursorRing');
-  let mx = 0, my = 0, rx = 0, ry = 0;
-
-  document.addEventListener('mousemove', e => {
-    mx = e.clientX; my = e.clientY;
-    cursor.style.left = mx - 6 + 'px';
-    cursor.style.top = my - 6 + 'px';
-  });
-
-  function animateRing() {
-    rx += (mx - rx) * 0.12;
-    ry += (my - ry) * 0.12;
-    ring.style.left = rx - 18 + 'px';
-    ring.style.top = ry - 18 + 'px';
-    requestAnimationFrame(animateRing);
-  }
-  animateRing();
-
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      cursor.style.transform = 'scale(2)';
-      ring.style.transform = 'scale(1.5)';
-      ring.style.borderColor = 'rgba(0,196,204,0.8)';
-    });
-    el.addEventListener('mouseleave', () => {
-      cursor.style.transform = 'scale(1)';
-      ring.style.transform = 'scale(1)';
-      ring.style.borderColor = 'rgba(0,196,204,0.5)';
-    });
-  });
-
-  // Scroll reveal
+  // Compatibilidad: el contenido es visible por defecto.
   const revealEls = document.querySelectorAll('.reveal');
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => entry.target.classList.add('visible'), i * 80);
-    
+  revealEls.forEach(el => el.classList.add('visible'));
+</script>
+</body>
+</html>

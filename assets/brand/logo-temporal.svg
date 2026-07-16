@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 56" role="img" aria-labelledby="title">
+  <title id="title">FMV InfraSec</title>
+  <defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#67e8f9"/><stop offset="1" stop-color="#00c4cc"/></linearGradient></defs>
+  <path d="M28 3 51 12v15c0 13-8 22-23 27C13 49 5 40 5 27V12L28 3Z" fill="#0d1f4e" stroke="url(#g)" stroke-width="3"/>
+  <path d="m17 28 7 7 15-17" fill="none" stroke="url(#g)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="64" y="29" fill="#f8fafc" font-family="Arial,sans-serif" font-size="22" font-weight="700">FMV</text>
+  <text x="64" y="47" fill="#00c4cc" font-family="Arial,sans-serif" font-size="16" font-weight="700">InfraSec</text>
+</svg>
