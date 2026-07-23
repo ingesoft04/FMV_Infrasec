@@ -12,11 +12,21 @@ function createAuthMiddleware(secret) {
   }
 
   function adminOnly(req, res, next) {
-    if (req.usuario.rol !== 'admin') return res.status(403).json({ error: 'Acceso restringido.' });
+    if (!['admin', 'sa'].includes(req.usuario.rol)) return res.status(403).json({ error: 'Acceso restringido.' });
     next();
   }
 
-  return { authenticate, adminOnly };
+  function staffOnly(req, res, next) {
+    if (!['asesor', 'sa'].includes(req.usuario.rol)) return res.status(403).json({ error: 'Acceso restringido al equipo de asesorías.' });
+    next();
+  }
+
+  function saOnly(req, res, next) {
+    if (req.usuario.rol !== 'sa') return res.status(403).json({ error: 'Acceso exclusivo para el SA.' });
+    next();
+  }
+
+  return { authenticate, adminOnly, staffOnly, saOnly };
 }
 
 module.exports = createAuthMiddleware;

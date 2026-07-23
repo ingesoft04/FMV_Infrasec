@@ -27,6 +27,8 @@ services:
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:4100}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@fmvinfrasec.local}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:-AdminFMV2026!}
+      SA_EMAIL: ${SA_EMAIL:-sa@fmvinfrasec.local}
+      SA_PASSWORD: ${SA_PASSWORD:-CambiarSA2026!}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SECURE: ${SMTP_SECURE:-false}

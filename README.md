@@ -4,6 +4,8 @@ Adaptación de los componentes reutilizables de `Maquillaje_Web` al negocio de F
 
 La organización interna aplica principios SOLID. Consulte [docs/ARQUITECTURA-SOLID.md](docs/ARQUITECTURA-SOLID.md).
 
+La instalación, configuración, publicación y operación están documentadas en [docs/MANUAL-INSTALACION-Y-USO.md](docs/MANUAL-INSTALACION-Y-USO.md).
+
 ## Incluye
 
 - Catálogo de productos y servicios FMV.
@@ -40,12 +42,4 @@ Cambie ambas variables (`ADMIN_EMAIL` y `ADMIN_PASSWORD`) antes de exponer el si
 - `PAYMENT_PROVIDER=local` aprueba pagos de prueba. Para producción debe conectarse el adaptador del proveedor elegido y validar sus webhooks.
 - Las cotizaciones se generan en PDF y las asesorías se exportan como archivos `.ics`.
 
-## Primer administrador
-
-Registre el usuario normalmente y cambie su rol una sola vez desde PostgreSQL:
-
-```sql
-UPDATE usuarios SET rol='admin' WHERE email='admin@fmvinfrasec.com';
-```
-
-Antes de producción cambie `POSTGRES_PASSWORD` y `JWT_SECRET`, configure HTTPS y restrinja `FRONTEND_URL` al dominio definitivo.
+Antes de producción cambie `POSTGRES_PASSWORD`, `JWT_SECRET`, `ADMIN_EMAIL` y `ADMIN_PASSWORD`; configure HTTPS y restrinja `FRONTEND_URL` al dominio definitivo.

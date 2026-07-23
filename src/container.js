@@ -12,13 +12,16 @@ const QuoteRepository = require('./repositories/QuoteRepository');
 const PaymentRepository = require('./repositories/PaymentRepository');
 const AdminRepository = require('./repositories/AdminRepository');
 const CommunicationRepository = require('./repositories/CommunicationRepository');
+const StaffRepository = require('./repositories/StaffRepository');
 const AuthService = require('./services/AuthService');
 const AppointmentService = require('./services/AppointmentService');
 const SalesService = require('./services/SalesService');
 const AdminService = require('./services/AdminService');
+const StaffService = require('./services/StaffService');
 const AuthController = require('./http/controllers/AuthController');
 const CommercialController = require('./http/controllers/CommercialController');
 const AdminController = require('./http/controllers/AdminController');
+const StaffController = require('./http/controllers/StaffController');
 
 function buildContainer() {
   const repositories = {
@@ -29,7 +32,8 @@ function buildContainer() {
     quotes: new QuoteRepository(pool),
     payments: new PaymentRepository(pool),
     admin: new AdminRepository(pool),
-    communications: new CommunicationRepository(pool)
+    communications: new CommunicationRepository(pool),
+    staff: new StaffRepository(pool)
   };
   const { enviarCorreo, enviarWhatsApp } = createCommunicationSenders(repositories.communications);
   const adapters = {
@@ -42,10 +46,12 @@ function buildContainer() {
     sales: new SalesService({ quotes: repositories.quotes, payments: repositories.payments, appointments: repositories.appointments, documents: adapters.documents, config })
   };
   services.admin = new AdminService({ admin: repositories.admin, appointments: repositories.appointments, quotes: repositories.quotes, users: repositories.users, notifications: adapters.notifications, config });
+  services.staff = new StaffService({ staff: repositories.staff, appointments: repositories.appointments });
   const controllers = {
     auth: new AuthController(services.auth),
     commercial: new CommercialController({ catalog: repositories.catalog, appointments: services.appointments, sales: services.sales }),
-    admin: new AdminController(services.admin)
+    admin: new AdminController(services.admin),
+    staff: new StaffController(services.staff)
   };
   return { config, db: pool, repositories, adapters, services, controllers };
 }

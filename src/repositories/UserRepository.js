@@ -40,6 +40,15 @@ class UserRepository extends BaseRepository {
       [email, passwordHash]
     );
   }
+
+  async upsertSuperAdmin({ email, passwordHash }) {
+    return this.query(
+      `INSERT INTO usuarios (nombre,email,empresa,password_hash,rol,email_verificado)
+       VALUES ('Superadministrador FMV',LOWER($1),'FMV InfraSec',$2,'sa',TRUE)
+       ON CONFLICT (email) DO UPDATE SET rol='sa',activo=TRUE`,
+      [email, passwordHash]
+    );
+  }
 }
 
 module.exports = UserRepository;

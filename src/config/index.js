@@ -9,5 +9,7 @@ module.exports = Object.freeze({
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   adminEmail: process.env.ADMIN_EMAIL,
   adminPassword: process.env.ADMIN_PASSWORD,
+  saEmail: process.env.SA_EMAIL,
+  saPassword: process.env.SA_PASSWORD,
   paymentProvider: process.env.PAYMENT_PROVIDER || 'local'
 });
