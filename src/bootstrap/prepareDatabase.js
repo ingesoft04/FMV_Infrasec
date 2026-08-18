@@ -3,7 +3,7 @@ const path = require('path');
 const bcrypt = require('bcryptjs');
 
 module.exports = async ({ db, users, config }) => {
-  for (const name of ['002_crm_comercial.sql', '003_portal_asesores.sql']) {
+  for (const name of ['002_crm_comercial.sql', '003_portal_asesores.sql', '004_pagos_y_valores.sql']) {
     const migration = await fs.readFile(path.join(config.root, 'sql', 'migrations', name), 'utf8');
     await db.query(migration);
   }

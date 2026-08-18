@@ -1,5 +1,6 @@
 const AppError = require('../core/AppError');
 const { referenciaPago } = require('../core/security');
+const paymentMethods = require('../core/paymentMethods');
 
 class SalesService {
   constructor({ quotes, payments, appointments, documents, config }) {
@@ -33,18 +34,28 @@ class SalesService {
     return this.payments.byUser(userId).then((pagos) => ({ pagos }));
   }
 
+  listPaymentMethods() {
+    return { metodos: paymentMethods.list() };
+  }
+
   async createPayment(userId, data) {
     const quote = await this.quotes.accepted(data.cotizacion_id, userId);
     if (!quote) throw new AppError('Debe aceptar una cotización válida antes de pagar.');
+    const method = String(data.metodo || 'transferencia').toLowerCase();
+    if (!paymentMethods.isSupported(method)) throw new AppError('Método de pago no disponible.');
+    const existing = await this.payments.activeForQuote(quote.id, userId);
+    if (existing) throw new AppError(`Ya existe un pago ${existing.estado} para esta cotización.`, 409);
     const local = this.config.paymentProvider === 'local';
+    const externalReference = String(data.referencia_externa || '').trim().slice(0, 80) || null;
+    const note = String(data.nota || '').trim().slice(0, 300) || null;
     const payment = await this.payments.create({
       quoteId: quote.id, userId, reference: referenciaPago(), amount: quote.total,
-      currency: quote.moneda, method: data.metodo || 'transferencia',
-      provider: this.config.paymentProvider, state: local ? 'aprobado' : 'pendiente',
-      metadata: { modo: local ? 'simulacion_local' : 'externo' }
+      currency: quote.moneda, method,
+      provider: this.config.paymentProvider, state: local ? 'en_validacion' : 'pendiente',
+      metadata: { modo: local ? 'validacion_manual' : 'pasarela_externa', referencia_externa: externalReference, nota: note }
     });
     await this.appointments.addActivity(quote.asesoria_id, userId, 'pago', `Pago ${payment.estado}`, { referencia: payment.referencia });
-    return { pago: payment, modo: local ? 'local' : 'externo' };
+    return { pago: payment, modo: local ? 'validacion_manual' : 'pasarela_externa' };
   }
 }
 

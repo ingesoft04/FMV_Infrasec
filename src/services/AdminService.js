@@ -53,11 +53,21 @@ class AdminService {
     return { cotizacion: quote };
   }
 
-  async updatePayment(id, state) {
-    if (!['pendiente','aprobado','rechazado','reembolsado'].includes(state)) throw new AppError('Estado inválido.');
-    const payment = await this.admin.updatePaymentState(id, state);
+  async updatePayment(id, data, actorId) {
+    if (!['pendiente','en_validacion','aprobado','rechazado','reembolsado'].includes(data.estado)) throw new AppError('Estado inválido.');
+    const note = String(data.nota || '').trim().slice(0, 500);
+    if (data.estado === 'rechazado' && !note) throw new AppError('Indique el motivo del rechazo.');
+    const payment = await this.admin.updatePaymentState(id, data.estado, actorId, note);
     if (!payment) throw new AppError('Pago no encontrado.', 404);
     return { pago: payment };
+  }
+
+  async updateProductPrice(id, value) {
+    const price = value === null || value === '' ? null : Number(value);
+    if (price !== null && (!Number.isFinite(price) || price < 0)) throw new AppError('El valor debe ser un número positivo.');
+    const product = await this.admin.updateProductPrice(id, price);
+    if (!product) throw new AppError('Producto no encontrado.', 404);
+    return { producto: product };
   }
 
   async updateAppointment(id, state) {

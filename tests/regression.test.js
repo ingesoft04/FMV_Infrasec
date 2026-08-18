@@ -56,9 +56,27 @@ test('portales, imágenes y API continúan disponibles', async () => {
     'assets/brand/logo-temporal.svg',
     'health',
     'api/productos',
-    'api/consultores'
+    'api/consultores',
+    'api/metodos-pago'
   ];
   await Promise.all(rutas.map(obtener));
+});
+
+test('precios y métodos de pago se muestran sin capturar datos sensibles', async () => {
+  const methods = await (await obtener('api/metodos-pago')).json();
+  assert.deepEqual(methods.metodos.map((method) => method.id), ['pse','tarjeta','transferencia','nequi','daviplata','efectivo']);
+
+  const portal = await (await obtener('portal-comercial.html')).text();
+  assert.match(portal, /Desde \$\{money\(p\.precio_desde\)\}/);
+  assert.match(portal, /No ingrese números de tarjeta ni códigos de seguridad/);
+  assert.match(portal, /Subtotal \$\{money\(q\.subtotal/);
+  assert.match(portal, /impuestos \$\{money\(q\.impuestos/);
+  assert.match(portal, /total \$\{money\(q\.total/);
+
+  const admin = await (await obtener('admin-comercial.html')).text();
+  assert.match(admin, />Valores</);
+  assert.match(admin, /en_validacion/);
+  assert.match(admin, /Motivo del rechazo/);
 });
 
 test('el portal interno separa las funciones del asesor y del SA', async () => {
