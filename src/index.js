@@ -3,9 +3,11 @@ require('dotenv').config();
 const buildContainer = require('./container');
 const createApp = require('./app');
 const prepareDatabase = require('./bootstrap/prepareDatabase');
+const validateConfiguration = require('./config/validate');
 
 async function start() {
   const container = buildContainer();
+  validateConfiguration(container.config);
   await prepareDatabase({
     db: container.db,
     users: container.repositories.users,

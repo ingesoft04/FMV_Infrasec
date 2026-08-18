@@ -11,5 +11,6 @@ module.exports = Object.freeze({
   adminPassword: process.env.ADMIN_PASSWORD,
   saEmail: process.env.SA_EMAIL,
   saPassword: process.env.SA_PASSWORD,
+  bootstrapUsers: process.env.BOOTSTRAP_USERS === 'true',
   paymentProvider: process.env.PAYMENT_PROVIDER || 'local'
 });
