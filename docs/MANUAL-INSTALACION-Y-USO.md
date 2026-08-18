@@ -159,6 +159,8 @@ La respuesta esperada contiene:
 | `POSTGRES_PASSWORD` | Sí | Contraseña de PostgreSQL |
 | `JWT_SECRET` | Sí | Firma de sesiones JWT |
 | `JWT_EXPIRES_IN` | No | Duración de sesión, por ejemplo `7d` |
+| `JWT_ISSUER` | No | Emisor esperado de los JWT |
+| `JWT_AUDIENCE` | No | Audiencia esperada de los JWT |
 | `ADMIN_EMAIL` | Sí | Administrador inicial |
 | `ADMIN_PASSWORD` | Sí | Clave del administrador inicial |
 | `SA_EMAIL` | Sí | Correo del superadministrador inicial |
