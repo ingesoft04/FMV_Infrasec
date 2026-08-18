@@ -28,12 +28,9 @@ Abra `http://localhost:4100/portal-comercial.html`. La página corporativa está
 
 El CRM administrativo está en `http://localhost:4100/admin-comercial.html`.
 
-En modo local se crea este acceso inicial:
-
-- Correo: `admin@fmvinfrasec.local`
-- Contraseña: `AdminFMV2026!`
-
-Cambie ambas variables (`ADMIN_EMAIL` y `ADMIN_PASSWORD`) antes de exponer el sistema.
+El primer arranque requiere definir secretos reales en `.env`. Para crear las cuentas
+iniciales use `BOOTSTRAP_USERS=true`, configure `ADMIN_*` y `SA_*`, arranque una vez
+y luego cambie `BOOTSTRAP_USERS=false` y retire esas contraseñas del archivo.
 
 ## Integraciones
 
@@ -42,4 +39,6 @@ Cambie ambas variables (`ADMIN_EMAIL` y `ADMIN_PASSWORD`) antes de exponer el si
 - `PAYMENT_PROVIDER=local` aprueba pagos de prueba. Para producción debe conectarse el adaptador del proveedor elegido y validar sus webhooks.
 - Las cotizaciones se generan en PDF y las asesorías se exportan como archivos `.ics`.
 
-Antes de producción cambie `POSTGRES_PASSWORD`, `JWT_SECRET`, `ADMIN_EMAIL` y `ADMIN_PASSWORD`; configure HTTPS y restrinja `FRONTEND_URL` al dominio definitivo.
+La aplicación rechaza el arranque en producción cuando detecta secretos ausentes,
+débiles o iguales a los ejemplos. Configure HTTPS y restrinja `FRONTEND_URL` al
+dominio definitivo.

@@ -108,14 +108,18 @@ APP_PORT=4100
 FRONTEND_URL=http://localhost:4100
 APP_BASE_URL=http://localhost:4100
 POSTGRES_PASSWORD=una-clave-segura
+DATABASE_URL=postgres://fmv:una-clave-segura@postgres:5432/fmv_comercial
 JWT_SECRET=una-clave-aleatoria-de-al-menos-32-caracteres
+BOOTSTRAP_USERS=true
 ADMIN_EMAIL=administrador@empresa.com
 ADMIN_PASSWORD=una-clave-administrativa-segura
 SA_EMAIL=sa@empresa.com
 SA_PASSWORD=una-clave-sa-segura
 ```
 
-No utilice las claves de ejemplo en un servidor público.
+No utilice las claves de ejemplo. El servidor rechazará el arranque en producción.
+Después del primer inicio, cambie `BOOTSTRAP_USERS=false` y retire
+`ADMIN_PASSWORD` y `SA_PASSWORD` del archivo `.env`.
 
 ### 5.2 Construir e iniciar
 
@@ -157,12 +161,14 @@ La respuesta esperada contiene:
 | `APP_BASE_URL` | Sí | URL pública usada en enlaces de correo |
 | `FRONTEND_URL` | Sí | Origen autorizado por CORS |
 | `POSTGRES_PASSWORD` | Sí | Contraseña de PostgreSQL |
+| `DATABASE_URL` | Sí | Conexión PostgreSQL usada por la API |
 | `JWT_SECRET` | Sí | Firma de sesiones JWT |
 | `JWT_EXPIRES_IN` | No | Duración de sesión, por ejemplo `7d` |
-| `ADMIN_EMAIL` | Sí | Administrador inicial |
-| `ADMIN_PASSWORD` | Sí | Clave del administrador inicial |
-| `SA_EMAIL` | Sí | Correo del superadministrador inicial |
-| `SA_PASSWORD` | Sí | Clave del superadministrador inicial |
+| `BOOTSTRAP_USERS` | Primer arranque | Habilita la creación de cuentas privilegiadas iniciales |
+| `ADMIN_EMAIL` | Con bootstrap | Administrador inicial |
+| `ADMIN_PASSWORD` | Con bootstrap | Clave del administrador inicial |
+| `SA_EMAIL` | Con bootstrap | Correo del superadministrador inicial |
+| `SA_PASSWORD` | Con bootstrap | Clave del superadministrador inicial |
 | `SMTP_HOST` | Para correo real | Servidor SMTP |
 | `SMTP_PORT` | Para correo real | Normalmente `587` o `465` |
 | `SMTP_SECURE` | Para correo real | `true` para TLS directo |

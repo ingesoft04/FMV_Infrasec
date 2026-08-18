@@ -4,7 +4,7 @@ services:
     environment:
       POSTGRES_DB: fmv_comercial
       POSTGRES_USER: fmv
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-fmv_local}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD en .env}
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
@@ -20,15 +20,17 @@ services:
     environment:
       PORT: 4000
       NODE_ENV: production
-      DATABASE_URL: postgres://fmv:${POSTGRES_PASSWORD:-fmv_local}@postgres:5432/fmv_comercial
-      JWT_SECRET: ${JWT_SECRET:-desarrollo-local-cambie-esta-clave-32-caracteres}
-      JWT_EXPIRES_IN: 7d
-      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4000}
-      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:4100}
-      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@fmvinfrasec.local}
-      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-AdminFMV2026!}
-      SA_EMAIL: ${SA_EMAIL:-sa@fmvinfrasec.local}
-      SA_PASSWORD: ${SA_PASSWORD:-CambiarSA2026!}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Defina POSTGRES_PASSWORD en .env}
+      DATABASE_URL: ${DATABASE_URL:?Defina DATABASE_URL en .env}
+      JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET en .env}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      FRONTEND_URL: ${FRONTEND_URL:?Defina FRONTEND_URL en .env}
+      APP_BASE_URL: ${APP_BASE_URL:?Defina APP_BASE_URL en .env}
+      BOOTSTRAP_USERS: ${BOOTSTRAP_USERS:-false}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:-}
+      SA_EMAIL: ${SA_EMAIL:-}
+      SA_PASSWORD: ${SA_PASSWORD:-}
       SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_SECURE: ${SMTP_SECURE:-false}
@@ -38,7 +40,7 @@ services:
       WHATSAPP_TOKEN: ${WHATSAPP_TOKEN:-}
       WHATSAPP_PHONE_NUMBER_ID: ${WHATSAPP_PHONE_NUMBER_ID:-}
       PAYMENT_PROVIDER: ${PAYMENT_PROVIDER:-local}
-      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-cambie-este-secreto}
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
     ports:
       - "${APP_PORT:-4100}:4000"
     depends_on:
