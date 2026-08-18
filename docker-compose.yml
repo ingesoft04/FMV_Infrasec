@@ -23,6 +23,8 @@ services:
       DATABASE_URL: postgres://fmv:${POSTGRES_PASSWORD:-fmv_local}@postgres:5432/fmv_comercial
       JWT_SECRET: ${JWT_SECRET:-desarrollo-local-cambie-esta-clave-32-caracteres}
       JWT_EXPIRES_IN: 7d
+      JWT_ISSUER: ${JWT_ISSUER:-fmv-infrasec}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-fmv-portales}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:4000}
       APP_BASE_URL: ${APP_BASE_URL:-http://localhost:4100}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@fmvinfrasec.local}

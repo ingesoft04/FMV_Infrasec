@@ -19,6 +19,10 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
 
   const response = await obtener('fmv-infrasec.html');
   const html = await response.text();
+  assert.match(response.headers.get('content-security-policy') || '', /frame-ancestors 'none'/);
+  assert.match(response.headers.get('content-security-policy') || '', /script-src-attr 'unsafe-inline'/);
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-powered-by'), null);
 
   for (const texto of [
     'Tecnología segura',
@@ -76,6 +80,35 @@ test('el portal interno separa las funciones del asesor y del SA', async () => {
     const unauthorized = await fetch(`${BASE}/${route}`);
     assert.equal(unauthorized.status, 401, `${route} debe exigir autenticación`);
   }
+});
+
+test('la política de contraseña rechaza claves débiles', async () => {
+  const response = await fetch(`${BASE}/api/auth/registro`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      nombre: 'Prueba',
+      empresa: 'FMV',
+      email: 'debil@example.invalid',
+      password: '12345678'
+    })
+  });
+  assert.equal(response.status, 400);
+  const data = await response.json();
+  assert.match(data.error, /contraseña segura de mínimo 10 caracteres/i);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+});
+
+test('los portales sensibles no persisten JWT en localStorage', async () => {
+  for (const page of ['portal-comercial.html', 'admin-comercial.html', 'gestion-asesorias.html']) {
+    const response = await obtener(page);
+    const html = await response.text();
+    assert.doesNotMatch(html, /localStorage/);
+    assert.match(html, /sessionStorage/);
+  }
+  const admin = await (await obtener('admin-comercial.html')).text();
+  assert.match(admin, /Sistema visual legible del CRM/);
+  assert.match(admin, /html\{font-size:17px\}/);
 });
 
 test('el portal comercial conserva una presentación centrada y legible', async () => {

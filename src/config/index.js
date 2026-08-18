@@ -7,6 +7,8 @@ module.exports = Object.freeze({
   baseUrl: process.env.APP_BASE_URL || `http://localhost:${process.env.APP_PORT || 4100}`,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+  jwtIssuer: process.env.JWT_ISSUER || 'fmv-infrasec',
+  jwtAudience: process.env.JWT_AUDIENCE || 'fmv-portales',
   adminEmail: process.env.ADMIN_EMAIL,
   adminPassword: process.env.ADMIN_PASSWORD,
   saEmail: process.env.SA_EMAIL,

@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const AppError = require('../core/AppError');
+const { isStrongPassword, passwordRequirement } = require('../core/passwordPolicy');
 
 class StaffService {
   constructor({ staff, appointments }) {
@@ -29,11 +30,11 @@ class StaffService {
     if (!data.nombre?.trim() || !data.email?.trim() || !data.empresa?.trim() || !this.roles.includes(data.rol)) {
       throw new AppError('Nombre, correo, empresa y rol válido son obligatorios.');
     }
-    if (!editing && (!data.password || data.password.length < 8)) {
-      throw new AppError('La contraseña debe tener mínimo 8 caracteres.');
+    if (!editing && !isStrongPassword(data.password)) {
+      throw new AppError(`La contraseña debe tener ${passwordRequirement}.`);
     }
-    if (editing && data.password && data.password.length < 8) {
-      throw new AppError('La nueva contraseña debe tener mínimo 8 caracteres.');
+    if (editing && data.password && !isStrongPassword(data.password)) {
+      throw new AppError(`La nueva contraseña debe tener ${passwordRequirement}.`);
     }
   }
 
@@ -71,4 +72,3 @@ class StaffService {
 }
 
 module.exports = StaffService;
-

@@ -48,3 +48,16 @@ test('la composición inyecta repositorios, adaptadores y servicios', () => {
     assert.match(source, new RegExp(`\\b${concept}\\b`));
   }
 });
+
+test('la autorización revalida usuario activo, rol y parámetros JWT', () => {
+  const middleware = fs.readFileSync(path.join(ROOT, 'http', 'middleware', 'auth.js'), 'utf8');
+  assert.match(middleware, /users\.authorizationState\(payload\.id\)/);
+  assert.match(middleware, /!current\?\.activo/);
+  assert.match(middleware, /current\.rol !== payload\.rol/);
+  assert.match(middleware, /algorithms:\s*\['HS256'\]/);
+
+  const app = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
+  assert.match(app, /contentSecurityPolicy/);
+  assert.match(app, /frameAncestors:\s*\["'none'"\]/);
+  assert.match(app, /Cache-Control',\s*'no-store'/);
+});
