@@ -225,7 +225,7 @@ Las plantillas y reglas de Meta pueden exigir aprobación antes de enviar mensaj
 
 ## 9. Pagos
 
-`PAYMENT_PROVIDER=local` es un simulador y aprueba pagos de prueba. No debe utilizarse para recaudar dinero real.
+`PAYMENT_PROVIDER=local` registra la solicitud en estado **en validación** y exige revisión administrativa; nunca aprueba un pago automáticamente. No debe utilizarse para recaudar dinero real sin integrar una pasarela certificada.
 
 Para producción:
 
@@ -302,6 +302,21 @@ No publique directamente PostgreSQL ni el puerto interno de la API en Internet.
 2. Descargue el PDF.
 3. Acepte o rechace la propuesta.
 4. Si la acepta, utilice el pago habilitado.
+5. Seleccione PSE, tarjeta, transferencia bancaria, Nequi, Daviplata o efectivo.
+6. Conserve la referencia generada y espere la validación del administrador.
+
+El portal muestra subtotal, impuestos y total en COP. Por seguridad, nunca solicite ni escriba en el portal el número completo de una tarjeta, su fecha de vencimiento, PIN o CVV.
+
+### 11.4 Administración de valores y validación de pagos
+
+1. Ingrese a `admin-comercial.html` con un usuario administrador.
+2. Abra **Valores** para definir el precio público “desde” de cada producto. Un campo vacío se publica como **Valor según alcance**.
+3. Abra **Pagos** y contraste la referencia con el movimiento bancario o la confirmación del proveedor.
+4. Mantenga **En validación** mientras no exista evidencia suficiente.
+5. Marque **Aprobado** únicamente después de confirmar el recaudo; para **Rechazado** el sistema exige un motivo.
+6. Use **Reembolsado** solo después de completar el reintegro por el canal correspondiente.
+
+Estados disponibles: pendiente, en validación, aprobado, rechazado y reembolsado. Una cotización no puede tener simultáneamente más de un pago activo.
 5. Conserve la referencia generada.
 
 ### 11.4 Recuperar contraseña

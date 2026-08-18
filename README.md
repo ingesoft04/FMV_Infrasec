@@ -36,7 +36,9 @@ y luego cambie `BOOTSTRAP_USERS=false` y retire esas contraseñas del archivo.
 
 - Sin SMTP, los correos se guardan como simulados y el portal permite probar verificación y recuperación.
 - Sin credenciales de Meta, WhatsApp se registra como simulado y genera enlaces `wa.me`.
-- `PAYMENT_PROVIDER=local` aprueba pagos de prueba. Para producción debe conectarse el adaptador del proveedor elegido y validar sus webhooks.
+- `PAYMENT_PROVIDER=local` registra pagos para validación manual; nunca los aprueba automáticamente. Para producción debe conectarse el adaptador del proveedor elegido y validar sus webhooks.
+
+El portal admite PSE, tarjeta, transferencia bancaria, Nequi, Daviplata y efectivo. No almacena número de tarjeta, fecha de vencimiento ni CVV. Los administradores pueden publicar valores “desde” y validar los pagos desde el CRM.
 - Las cotizaciones se generan en PDF y las asesorías se exportan como archivos `.ics`.
 
 La aplicación rechaza el arranque en producción cuando detecta secretos ausentes,

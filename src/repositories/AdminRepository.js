@@ -2,7 +2,7 @@ const BaseRepository = require('./BaseRepository');
 
 class AdminRepository extends BaseRepository {
   async dashboard() {
-    const [summary, opportunities, quotes, payments, communications] = await Promise.all([
+    const [summary, opportunities, quotes, payments, communications, products] = await Promise.all([
       this.query(`SELECT (SELECT COUNT(*)::int FROM usuarios) clientes,
         (SELECT COUNT(*)::int FROM productos WHERE activo) productos,
         (SELECT COUNT(*)::int FROM asesorias) asesorias,
@@ -16,11 +16,12 @@ class AdminRepository extends BaseRepository {
         JOIN usuarios u ON u.id=q.usuario_id JOIN asesorias a ON a.id=q.asesoria_id
         JOIN productos p ON p.id=a.producto_id ORDER BY q.creado_en DESC`),
       this.query(`SELECT pa.*,u.nombre cliente,u.empresa FROM pagos pa JOIN usuarios u ON u.id=pa.usuario_id ORDER BY pa.creado_en DESC`),
-      this.query('SELECT * FROM comunicaciones ORDER BY creado_en DESC LIMIT 100')
+      this.query('SELECT * FROM comunicaciones ORDER BY creado_en DESC LIMIT 100'),
+      this.query('SELECT id,nombre,categoria,modalidad,precio_desde,activo FROM productos ORDER BY orden,nombre')
     ]);
     return {
       resumen: summary.rows[0], oportunidades: opportunities.rows, cotizaciones: quotes.rows,
-      pagos: payments.rows, comunicaciones: communications.rows
+      pagos: payments.rows, comunicaciones: communications.rows, productos: products.rows
     };
   }
 
@@ -38,8 +39,16 @@ class AdminRepository extends BaseRepository {
       .then((result) => result.rows[0]);
   }
 
-  updatePaymentState(id, state) {
-    return this.query('UPDATE pagos SET estado=$1,actualizado_en=NOW() WHERE id=$2 RETURNING *', [state, id])
+  updatePaymentState(id, state, actorId, note) {
+    return this.query(
+      'UPDATE pagos SET estado=$1,actualizado_por=$2,nota_validacion=$3,actualizado_en=NOW() WHERE id=$4 RETURNING *',
+      [state, actorId, note || null, id]
+    )
+      .then((result) => result.rows[0]);
+  }
+
+  updateProductPrice(id, price) {
+    return this.query('UPDATE productos SET precio_desde=$1 WHERE id=$2 RETURNING id,nombre,precio_desde', [price, id])
       .then((result) => result.rows[0]);
   }
 }

@@ -6,6 +6,7 @@ class CommercialController {
   }
   products = async (req, res) => res.json({ productos: await this.catalog.products(req.query.categoria) });
   consultants = async (_req, res) => res.json({ consultores: await this.catalog.consultants() });
+  paymentMethods = async (_req, res) => res.json(this.sales.listPaymentMethods());
   availability = async (req, res) => res.json(await this.appointments.availability(req.query.consultor_id, req.query.fecha));
   listAppointments = async (req, res) => res.json(await this.appointments.list(req.usuario.id));
   createAppointment = async (req, res) => res.status(201).json(await this.appointments.create(req.usuario.id, req.body));

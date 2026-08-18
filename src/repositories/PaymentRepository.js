@@ -6,6 +6,14 @@ class PaymentRepository extends BaseRepository {
       .then((result) => result.rows);
   }
 
+  activeForQuote(quoteId, userId) {
+    return this.query(
+      `SELECT * FROM pagos WHERE cotizacion_id=$1 AND usuario_id=$2
+       AND estado IN ('pendiente','en_validacion','aprobado') ORDER BY creado_en DESC LIMIT 1`,
+      [quoteId, userId]
+    ).then((result) => result.rows[0]);
+  }
+
   create(data) {
     return this.query(
       `INSERT INTO pagos (cotizacion_id,usuario_id,referencia,monto,moneda,metodo,proveedor,estado,datos)
