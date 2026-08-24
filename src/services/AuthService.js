@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const AppError = require('../core/AppError');
 const { hashToken, randomToken } = require('../core/security');
+const { isStrongPassword, passwordRequirement } = require('../core/passwordPolicy');
 
 class AuthService {
   constructor({ users, tokens, notifications, config }) {
@@ -18,8 +19,8 @@ class AuthService {
   }
 
   async register(data) {
-    if (!data.nombre || !data.email || !data.empresa || !data.password || data.password.length < 8) {
-      throw new AppError('Nombre, correo, empresa y contraseña de mínimo 8 caracteres son obligatorios.');
+    if (!data.nombre || !data.email || !data.empresa || !isStrongPassword(data.password)) {
+      throw new AppError(`Nombre, correo, empresa y una contraseña de ${passwordRequirement} son obligatorios.`);
     }
     const user = await this.users.create({
       nombre: data.nombre.trim(), email: data.email.trim(), telefono: data.telefono?.trim(),
@@ -62,7 +63,7 @@ class AuthService {
   }
 
   async reset(token, password) {
-    if (!password || password.length < 8) throw new AppError('La contraseña debe tener mínimo 8 caracteres.');
+    if (!isStrongPassword(password)) throw new AppError(`La contraseña debe tener ${passwordRequirement}.`);
     const tokenHash = hashToken(token);
     const found = await this.tokens.findValid('recuperacion', tokenHash);
     if (!found) throw new AppError('El enlace no es válido o venció.');
@@ -78,7 +79,12 @@ class AuthService {
     }
     const payload = { id: user.id, nombre: user.nombre, rol: user.rol };
     return {
-      token: jwt.sign(payload, this.config.jwtSecret, { expiresIn: this.config.jwtExpiresIn }),
+      token: jwt.sign(payload, this.config.jwtSecret, {
+        algorithm: 'HS256',
+        expiresIn: this.config.jwtExpiresIn,
+        issuer: this.config.jwtIssuer,
+        audience: this.config.jwtAudience
+      }),
       usuario: { ...payload, email: user.email, empresa: user.empresa }
     };
   }

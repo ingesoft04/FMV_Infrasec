@@ -24,6 +24,8 @@ services:
       DATABASE_URL: ${DATABASE_URL:?Defina DATABASE_URL en .env}
       JWT_SECRET: ${JWT_SECRET:?Defina JWT_SECRET en .env}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN:-7d}
+      JWT_ISSUER: ${JWT_ISSUER:-fmv-infrasec}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-fmv-comercial}
       FRONTEND_URL: ${FRONTEND_URL:?Defina FRONTEND_URL en .env}
       APP_BASE_URL: ${APP_BASE_URL:?Defina APP_BASE_URL en .env}
       BOOTSTRAP_USERS: ${BOOTSTRAP_USERS:-false}
