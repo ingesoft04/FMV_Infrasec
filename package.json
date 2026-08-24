@@ -1,6 +1,7 @@
 {
   "name": "fmv-infrasec-comercial",
   "version": "1.0.0",
+  "packageManager": "pnpm@11.23.0",
   "private": true,
   "description": "Portal comercial y API de asesorías para el portafolio de FMV InfraSec",
   "main": "src/index.js",
@@ -8,15 +9,18 @@
     "start": "node src/index.js",
     "dev": "node --watch src/index.js",
     "check": "node --check src/index.js",
-    "test": "node --test --test-concurrency=1"
+    "test": "node --test --test-concurrency=1 tests/architecture.test.js tests/configuration.test.js tests/paymentMethods.test.js tests/security.test.js",
+    "test:integration": "node --test --test-concurrency=1 tests/regression.test.js"
   },
-  "engines": { "node": ">=22" },
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "express-rate-limit": "^8.1.0",
+    "express-rate-limit": "^8.6.2",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^9.0.3",

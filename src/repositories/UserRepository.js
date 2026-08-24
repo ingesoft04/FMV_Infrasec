@@ -19,6 +19,11 @@ class UserRepository extends BaseRepository {
       .then((result) => result.rows[0]);
   }
 
+  authorizationState(id) {
+    return this.query('SELECT id,nombre,rol,activo FROM usuarios WHERE id=$1', [id])
+      .then((result) => result.rows[0]);
+  }
+
   verifyEmailByToken(tokenHash) {
     return this.query(
       `UPDATE usuarios u SET email_verificado=TRUE,actualizado_en=NOW()

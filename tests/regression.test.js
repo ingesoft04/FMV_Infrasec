@@ -62,6 +62,13 @@ test('portales, imágenes y API continúan disponibles', async () => {
   await Promise.all(rutas.map(obtener));
 });
 
+test('archivos internos del servidor no quedan expuestos públicamente', async () => {
+  for (const route of ['src/app.js', 'sql/init.sql', 'package.json', 'docker-compose.yml', '.env.example']) {
+    const response = await fetch(`${BASE}/${route}`);
+    assert.equal(response.status, 404, `${route} no debe quedar disponible públicamente`);
+  }
+});
+
 test('precios y métodos de pago se muestran sin capturar datos sensibles', async () => {
   const methods = await (await obtener('api/metodos-pago')).json();
   assert.deepEqual(methods.metodos.map((method) => method.id), ['pse','tarjeta','transferencia','nequi','daviplata','efectivo']);
