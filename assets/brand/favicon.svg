@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">FMV InfraSec</title>
+  <defs>
+    <linearGradient id="shield" x1="8" y1="6" x2="56" y2="58" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#67e8f9"/>
+      <stop offset="1" stop-color="#00c4cc"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="#060e24"/>
+  <path d="M32 7 55 16v15c0 13-8 22-23 27C17 53 9 44 9 31V16L32 7Z" fill="#0d1f4e" stroke="url(#shield)" stroke-width="3"/>
+  <path d="m20 32 8 8 17-20" fill="none" stroke="url(#shield)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
