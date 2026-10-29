@@ -44,6 +44,7 @@ test('todas las páginas públicas declaran el favicon corporativo', () => {
   ]) {
     const html = fs.readFileSync(path.resolve(__dirname, '..', page), 'utf8');
     assert.match(html, /<link rel="icon" type="image\/svg\+xml" href="\/assets\/brand\/favicon\.svg">/);
+    assert.match(html, /<script src="\/assets\/test-environment\.js" defer><\/script>/);
   }
 });
 
@@ -59,7 +60,7 @@ test('solo publica páginas y activos expresamente permitidos', async (t) => {
   }));
   const base = `http://127.0.0.1:${server.address().port}`;
 
-  for (const route of ['/fmv-infrasec.html', '/portal-comercial.html', '/assets/brand/logo-temporal.svg', '/assets/brand/favicon.svg']) {
+  for (const route of ['/fmv-infrasec.html', '/portal-comercial.html', '/assets/brand/logo-temporal.svg', '/assets/brand/favicon.svg', '/assets/test-environment.js']) {
     const response = await fetch(`${base}${route}`);
     assert.equal(response.status, 200, `${route} debe ser pública`);
   }
