@@ -3,6 +3,7 @@ const assert = require('node:assert/strict');
 const path = require('node:path');
 const createApp = require('../src/app');
 const { isStrongPassword } = require('../src/core/passwordPolicy');
+const fs = require('node:fs');
 
 function controller() {
   return new Proxy({}, {
@@ -36,6 +37,16 @@ test('exige contraseñas resistentes', () => {
   assert.equal(isStrongPassword('Una-Clave-Segura-2026!'), true);
 });
 
+test('todas las páginas públicas declaran el favicon corporativo', () => {
+  for (const page of [
+    'fmv-infrasec.html', 'portal-comercial.html', 'admin-comercial.html',
+    'gestion-asesorias.html', 'fmv-guia-instalacion.html'
+  ]) {
+    const html = fs.readFileSync(path.resolve(__dirname, '..', page), 'utf8');
+    assert.match(html, /<link rel="icon" type="image\/svg\+xml" href="\/assets\/brand\/favicon\.svg">/);
+  }
+});
+
 test('solo publica páginas y activos expresamente permitidos', async (t) => {
   const server = createApp(container()).listen(0, '127.0.0.1');
   await new Promise((resolve, reject) => {
@@ -48,7 +59,7 @@ test('solo publica páginas y activos expresamente permitidos', async (t) => {
   }));
   const base = `http://127.0.0.1:${server.address().port}`;
 
-  for (const route of ['/fmv-infrasec.html', '/portal-comercial.html', '/assets/brand/logo-temporal.svg']) {
+  for (const route of ['/fmv-infrasec.html', '/portal-comercial.html', '/assets/brand/logo-temporal.svg', '/assets/brand/favicon.svg']) {
     const response = await fetch(`${base}${route}`);
     assert.equal(response.status, 200, `${route} debe ser pública`);
   }
