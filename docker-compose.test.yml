@@ -1,0 +1,5 @@
+services:
+  postgres:
+    # The Alpine variant currently fails to initialize a fresh cluster because
+    # of an ICU collation error. Keep this override isolated from production.
+    image: postgres:16-bookworm
