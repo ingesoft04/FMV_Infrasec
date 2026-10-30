@@ -170,13 +170,14 @@ def build():
     meta = doc.add_paragraph()
     meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
     meta.paragraph_format.space_before = Pt(42)
-    add_inline(meta, "Versión 1.0  |  16 de julio de 2026", 10, GRAY)
+    add_inline(meta, "Versión 1.1  |  30 de octubre de 2026", 10, GRAY)
     doc.add_page_break()
 
     doc.add_heading("Contenido", level=1)
     toc_items = [
-        "Objetivo y arquitectura", "Requisitos y archivos importantes", "Instalación local con Docker",
-        "Variables e integraciones", "Dominio y HTTPS", "Uso del portal de clientes",
+        "Objetivo y arquitectura", "Requisitos y archivos importantes", "Entornos y promoción",
+        "Instalación local con Docker", "Variables e integraciones", "Dominio y HTTPS con Caddy",
+        "Uso del portal de clientes",
         "Uso del CRM administrativo", "Imágenes y marca", "Operación y mantenimiento",
         "Respaldo, restauración y actualización", "Seguridad", "Solución de problemas",
         "Lista de publicación y soporte"
@@ -232,6 +233,10 @@ def build():
         elif line.startswith("- "):
             p = doc.add_paragraph(style="List Bullet")
             add_inline(p, line[2:], 10.5)
+        elif line.startswith("> "):
+            p = doc.add_paragraph()
+            p.paragraph_format.left_indent = Inches(0.3)
+            add_inline(p, line[2:], 10.5, NAVY)
         elif line.strip():
             p = doc.add_paragraph()
             add_inline(p, line, 10.5)
