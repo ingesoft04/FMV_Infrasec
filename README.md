@@ -6,6 +6,30 @@ La organización interna aplica principios SOLID. Consulte [docs/ARQUITECTURA-SO
 
 La instalación, configuración, publicación y operación están documentadas en [docs/MANUAL-INSTALACION-Y-USO.md](docs/MANUAL-INSTALACION-Y-USO.md).
 
+## Entornos publicados
+
+| Entorno | URL | Uso |
+|---|---|---|
+| Pruebas | <https://test-infrasec.dev-fmv.duckdns.org> | Validación de cada cambio antes de aprobarlo |
+| Producción | <https://infrasec.dev-fmv.duckdns.org> | Servicio público estable |
+
+Ambos entornos se alojan en una VM Ubuntu y se publican mediante Caddy. Pruebas usa
+contenedores, red, volumen PostgreSQL, secretos y puerto independientes (`4101`);
+producción usa el puerto `4100`. El entorno de pruebas muestra permanentemente el
+aviso **“Entorno de prueba · Los cambios aquí aún no están en producción”** y envía
+cabeceras `noindex` y `no-store`.
+
+El flujo obligatorio de publicación es:
+
+```text
+rama de cambio → pruebas locales y Security CI → entorno de pruebas
+→ revisión y aprobación explícita → nueva sincronización con GitHub
+→ fusión a main → despliegue y validación de producción
+```
+
+No se debe fusionar ni desplegar a producción mientras la revisión del entorno de
+pruebas esté pendiente.
+
 ## Incluye
 
 - Catálogo de productos y servicios FMV.
@@ -14,6 +38,7 @@ La instalación, configuración, publicación y operación están documentadas e
 - Objetivo, canal y presupuesto estimado por oportunidad.
 - Endpoints administrativos para revisar oportunidades y actualizar su estado.
 - PostgreSQL, autenticación JWT, rate limiting, Docker y página web integrada.
+- Favicon corporativo y marcador visual exclusivo del entorno de pruebas.
 
 Se descartaron deliberadamente los módulos exclusivos del negocio de maquillaje: tonos de piel, galería antes/después y perfil cosmético.
 

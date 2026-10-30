@@ -1,8 +1,8 @@
 # Manual de instalación y uso
 
-**Sistema:** FMV InfraSec - Portal comercial y CRM  
-**Versión del manual:** 1.0  
-**Fecha:** 16 de julio de 2026
+**Sistema:** FMV InfraSec - Portal comercial y CRM
+**Versión del manual:** 1.1
+**Fecha de actualización:** 30 de octubre de 2026
 
 ## 1. Objetivo
 
@@ -29,11 +29,11 @@ Navegador
    |
 Dominio + HTTPS
    |
-Proxy inverso Nginx
+Proxy inverso Caddy en VM Ubuntu
    |
-Aplicación Node.js / Express :4100
+Aplicación Node.js / Express en Docker
    |
-PostgreSQL
+PostgreSQL en Docker
 ```
 
 La arquitectura interna aplica SOLID:
@@ -82,10 +82,45 @@ Consulte también `docs/ARQUITECTURA-SOLID.md`.
 | `.env` | Configuración privada local; no se sube a Git |
 | `.env.example` | Plantilla de configuración |
 | `docker-compose.yml` | Servicios Docker |
+| `docker-compose.test.yml` | Sobrescritura PostgreSQL exclusiva de pruebas |
+| `assets/brand/favicon.svg` | Icono mostrado en la pestaña del navegador |
+| `assets/test-environment.js` | Banner activado únicamente en dominios `test-` |
 
-## 5. Instalación local con Docker
+## 5. Entornos oficiales y flujo de promoción
 
-### 5.1 Preparar configuración
+| Entorno | URL | Puerto local | Características |
+|---|---|---:|---|
+| Pruebas | `https://test-infrasec.dev-fmv.duckdns.org` | `4101` | Base y volumen propios, `noindex`, sin caché y banner visible |
+| Producción | `https://infrasec.dev-fmv.duckdns.org` | `4100` | Servicio público estable |
+
+Los dos entornos se encuentran en la VM Ubuntu, pero utilizan proyectos Docker,
+redes, volúmenes PostgreSQL, archivos `.env`, secretos y puertos diferentes. Nunca
+se debe reutilizar la base productiva para probar una rama.
+
+El proceso obligatorio para cualquier cambio es:
+
+1. Ejecutar `git fetch origin --prune`.
+2. Confirmar que la rama local no tenga commits remotos pendientes.
+3. Ejecutar comprobación de sintaxis, pruebas y auditoría.
+4. Subir la rama y abrir o actualizar un pull request.
+5. Esperar que **Security CI** termine correctamente.
+6. Desplegar la rama en el entorno de pruebas.
+7. Validar `/health`, páginas, API, favicon, banner y protección de archivos.
+8. Presentar la URL de pruebas para revisión humana.
+9. Esperar aprobación explícita. No fusionar antes de recibirla.
+10. Repetir `git fetch` y comprobar nuevamente que no existan cambios pendientes.
+11. Mostrar qué se fusionará, fusionar a `main` y desplegar producción.
+12. Ejecutar las verificaciones posteriores al despliegue y conservar la opción de reversión.
+
+El entorno de pruebas debe mostrar arriba:
+
+> **Entorno de prueba · Los cambios aquí aún no están en producción**
+
+El aviso se activa por el prefijo `test-`; no aparece en producción.
+
+## 6. Instalación local con Docker
+
+### 6.1 Preparar configuración
 
 Abra PowerShell dentro de la carpeta del proyecto:
 
@@ -121,13 +156,13 @@ No utilice las claves de ejemplo. El servidor rechazará el arranque en producci
 Después del primer inicio, cambie `BOOTSTRAP_USERS=false` y retire
 `ADMIN_PASSWORD` y `SA_PASSWORD` del archivo `.env`.
 
-### 5.2 Construir e iniciar
+### 6.2 Construir e iniciar
 
 ```powershell
 docker compose up -d --build
 ```
 
-### 5.3 Comprobar estado
+### 6.3 Comprobar estado
 
 ```powershell
 docker compose ps
@@ -143,7 +178,7 @@ La respuesta esperada contiene:
 }
 ```
 
-### 5.4 Direcciones locales
+### 6.4 Direcciones locales
 
 | Componente | Dirección |
 |---|---|
@@ -153,7 +188,7 @@ La respuesta esperada contiene:
 | Gestión de asesorías y usuarios | `http://localhost:4100/gestion-asesorias.html` |
 | Estado técnico | `http://localhost:4100/health` |
 
-## 6. Variables de configuración
+## 7. Variables de configuración
 
 | Variable | Obligatoria en producción | Descripción |
 |---|---:|---|
@@ -180,7 +215,7 @@ La respuesta esperada contiene:
 | `PAYMENT_PROVIDER` | Sí | `local` solo para pruebas |
 | `PAYMENT_WEBHOOK_SECRET` | Para pagos reales | Validación de webhooks |
 
-## 7. Configuración del correo SMTP
+## 8. Configuración del correo SMTP
 
 Sin credenciales SMTP, los mensajes se registran como `simulado`. Esto permite probar el sistema sin enviar correos.
 
@@ -208,7 +243,7 @@ Para producción configure en el dominio:
 - DKIM para firmar mensajes.
 - DMARC para definir políticas de autenticación.
 
-## 8. WhatsApp
+## 9. WhatsApp
 
 Sin credenciales de Meta, las notificaciones quedan como `simulado`.
 
@@ -223,7 +258,7 @@ El número de los clientes debe incluir código de país, por ejemplo `573001234
 
 Las plantillas y reglas de Meta pueden exigir aprobación antes de enviar mensajes iniciados por la empresa.
 
-## 9. Pagos
+## 10. Pagos
 
 `PAYMENT_PROVIDER=local` registra la solicitud en estado **en validación** y exige revisión administrativa; nunca aprueba un pago automáticamente. No debe utilizarse para recaudar dinero real sin integrar una pasarela certificada.
 
@@ -236,7 +271,7 @@ Para producción:
 5. Verifique la firma con `PAYMENT_WEBHOOK_SECRET`.
 6. Nunca marque un pago como aprobado únicamente por el retorno del navegador.
 
-## 10. Dominio y HTTPS
+## 11. Dominio y HTTPS
 
 Cuando compre el dominio, cree registros DNS:
 
@@ -277,9 +312,58 @@ sudo certbot --nginx -d fmvinfrasec.com -d www.fmvinfrasec.com
 
 No publique directamente PostgreSQL ni el puerto interno de la API en Internet.
 
-## 11. Uso del portal de clientes
+### 11.1 Configuración actual con Caddy
 
-### 11.1 Crear una cuenta
+La publicación oficial no usa Nginx: Caddy se ejecuta en la VM Ubuntu y emite o
+renueva automáticamente los certificados TLS. Los bloques equivalentes son:
+
+```caddyfile
+infrasec.dev-fmv.duckdns.org {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:4100
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+        -Server
+        -X-Powered-By
+    }
+}
+
+test-infrasec.dev-fmv.duckdns.org {
+    encode zstd gzip
+    reverse_proxy 127.0.0.1:4101
+    header {
+        Cache-Control "no-store, private"
+        X-Robots-Tag "noindex, nofollow, noarchive"
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+        -Server
+        -X-Powered-By
+    }
+}
+```
+
+Antes de recargar Caddy se debe crear una copia de respaldo y validar la candidata:
+
+```bash
+docker run --rm \
+  -v /ruta/Caddyfile.candidate:/etc/caddy/Caddyfile:ro \
+  caddy:2-alpine caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile
+```
+
+Si el Caddyfile se reemplaza mediante `mv`, el montaje bind del contenedor puede
+seguir apuntando al inode anterior. En ese caso se recrea exclusivamente Caddy para
+volver a montar el archivo; luego se valida HTTPS en ambos dominios.
+
+## 12. Uso del portal de clientes
+
+### 12.1 Crear una cuenta
 
 1. Abra el portal comercial.
 2. Seleccione **Crear cuenta**.
@@ -287,7 +371,7 @@ No publique directamente PostgreSQL ni el puerto interno de la API en Internet.
 4. Confirme el correo desde el enlace recibido.
 5. Inicie sesión.
 
-### 11.2 Solicitar una asesoría
+### 12.2 Solicitar una asesoría
 
 1. Seleccione el producto o servicio.
 2. Seleccione consultor, fecha y hora.
@@ -296,7 +380,7 @@ No publique directamente PostgreSQL ni el puerto interno de la API en Internet.
 5. Consulte el estado en **Mis asesorías**.
 6. Descargue el evento de calendario si lo necesita.
 
-### 11.3 Cotizaciones y pagos
+### 12.3 Cotizaciones y pagos
 
 1. Revise la cotización asignada.
 2. Descargue el PDF.
@@ -307,7 +391,7 @@ No publique directamente PostgreSQL ni el puerto interno de la API en Internet.
 
 El portal muestra subtotal, impuestos y total en COP. Por seguridad, nunca solicite ni escriba en el portal el número completo de una tarjeta, su fecha de vencimiento, PIN o CVV.
 
-### 11.4 Administración de valores y validación de pagos
+### 12.4 Administración de valores y validación de pagos
 
 1. Ingrese a `admin-comercial.html` con un usuario administrador.
 2. Abra **Valores** para definir el precio público “desde” de cada producto. Un campo vacío se publica como **Valor según alcance**.
@@ -317,22 +401,21 @@ El portal muestra subtotal, impuestos y total en COP. Por seguridad, nunca solic
 6. Use **Reembolsado** solo después de completar el reintegro por el canal correspondiente.
 
 Estados disponibles: pendiente, en validación, aprobado, rechazado y reembolsado. Una cotización no puede tener simultáneamente más de un pago activo.
-5. Conserve la referencia generada.
 
-### 11.4 Recuperar contraseña
+### 12.5 Recuperar contraseña
 
 1. Pulse **Olvidé mi contraseña**.
 2. Indique el correo registrado.
 3. Abra el enlace recibido.
 4. Defina una contraseña nueva de mínimo ocho caracteres.
 
-## 12. Uso del CRM administrativo
+## 13. Uso del CRM administrativo
 
-### 12.1 Acceso
+### 13.1 Acceso
 
 Abra `admin-comercial.html` e ingrese con `ADMIN_EMAIL` y `ADMIN_PASSWORD`.
 
-### 12.2 Embudo
+### 13.2 Embudo
 
 Las etapas son:
 
@@ -345,7 +428,7 @@ Las etapas son:
 
 El administrador puede cambiar la etapa y el valor estimado de cada oportunidad.
 
-### 12.3 Crear cotización
+### 13.3 Crear cotización
 
 1. Localice la oportunidad.
 2. Pulse **Cotizar**.
@@ -353,25 +436,26 @@ El administrador puede cambiar la etapa y el valor estimado de cada oportunidad.
 4. Seleccione borrador o envío inmediato.
 5. Verifique el PDF en la sección de cotizaciones.
 
-### 12.4 Notificar cliente
+### 13.4 Notificar cliente
 
 1. Pulse **Notificar** en la oportunidad.
 2. Seleccione correo, WhatsApp o ambos.
 3. Escriba asunto y mensaje.
 4. Revise el resultado en **Comunicaciones**.
 
-### 12.5 Pagos
+### 13.5 Pagos
 
 Revise referencia, cliente, monto, método y estado. Los estados disponibles son:
 
 - `pendiente`
+- `en_validacion`
 - `aprobado`
 - `rechazado`
 - `reembolsado`
 
-## 13. Gestión de imágenes y logo
+## 14. Gestión de imágenes, logo y favicon
 
-## Portal interno de asesores y SA
+### 14.1 Portal interno de asesores y SA
 
 Acceda a `http://localhost:4100/gestion-asesorias.html`.
 
@@ -393,6 +477,10 @@ El logo está en:
 assets/brand/
 ```
 
+El favicon corporativo es `assets/brand/favicon.svg`. Todas las páginas públicas
+deben declarar ese archivo en su `<head>`. Después de reemplazarlo, recargue el
+navegador sin caché porque los navegadores suelen conservar favicons antiguos.
+
 Puede reemplazar una imagen conservando el mismo nombre para evitar cambios en HTML. Mantenga:
 
 - Formato web compatible: PNG, JPG, WebP o SVG.
@@ -401,9 +489,9 @@ Puede reemplazar una imagen conservando el mismo nombre para evitar cambios en H
 - Copia del original.
 - Texto alternativo actualizado cuando cambie el contenido visual.
 
-## 14. Operación y mantenimiento
+## 15. Operación y mantenimiento
 
-### 14.1 Comandos frecuentes
+### 15.1 Comandos frecuentes
 
 ```powershell
 docker compose ps
@@ -413,13 +501,13 @@ docker compose stop
 docker compose up -d
 ```
 
-### 14.2 Aplicar cambios
+### 15.2 Aplicar cambios
 
 ```powershell
 docker compose up -d --build
 ```
 
-### 14.3 Ejecutar pruebas
+### 15.3 Ejecutar pruebas
 
 ```powershell
 pnpm test
@@ -439,9 +527,55 @@ Todas las modificaciones deben terminar con:
 - Cursor normal visible.
 - API y PostgreSQL saludables.
 
-## 15. Respaldo y restauración
+### 15.4 Desplegar el entorno de pruebas
 
-### 15.1 Crear respaldo
+El directorio operativo actual es `/home/fmv/apps/FMV_Infrasec-test`. Debe conservar
+su propio `.env` con permisos `600`. No copie el `.env` de producción ni lo incluya
+en Git.
+
+La composición se inicia con un nombre de proyecto exclusivo:
+
+```bash
+cd /home/fmv/apps/FMV_Infrasec-test
+docker compose -p fmv_infrasec_test \
+  -f docker-compose.yml \
+  -f docker-compose.test.yml \
+  up -d --build --wait
+```
+
+Los scripts SQL no contienen secretos y deben ser legibles por el usuario interno
+de PostgreSQL (`755` para sus directorios y `644` para archivos `.sql`). El `.env`
+debe permanecer en `600`.
+
+Después del despliegue ejecute:
+
+```bash
+curl --fail https://test-infrasec.dev-fmv.duckdns.org/health
+TEST_BASE_URL=https://test-infrasec.dev-fmv.duckdns.org pnpm test:integration
+pnpm audit --prod --audit-level moderate
+```
+
+Compruebe también:
+
+- Favicon y `assets/test-environment.js` responden HTTP `200`.
+- El banner de pruebas aparece en todas las páginas.
+- `.env`, `.git/config`, `package.json` y `src/index.js` responden HTTP `404`.
+- Las cabeceras incluyen `noindex`, `no-store`, HSTS y protección de contenido.
+- Producción continúa respondiendo y no muestra el banner.
+
+### 15.5 Automatización y GitHub
+
+`.github/workflows/security-ci.yml` se ejecuta para pull requests dirigidos a
+`main`. Instala el lockfile, comprueba sintaxis, ejecuta las pruebas y audita las
+dependencias productivas. Dependabot revisa las dependencias configuradas en
+`.github/dependabot.yml`.
+
+El CI aprobado complementa, pero no sustituye, la validación en la URL de pruebas
+ni la aprobación humana antes de fusionar.
+
+## 16. Respaldo y restauración
+
+### 16.1 Crear respaldo
 
 En PowerShell:
 
@@ -453,10 +587,10 @@ Guarde también:
 
 - `.env` en un almacén seguro.
 - `assets/`.
-- Certificados o configuración de Nginx.
+- Certificados y configuración de Caddy o Nginx.
 - Código fuente y migraciones.
 
-### 15.2 Restaurar
+### 16.2 Restaurar
 
 Detenga temporalmente el acceso de usuarios y ejecute:
 
@@ -467,29 +601,33 @@ docker compose exec postgres pg_restore -U fmv -d fmv_comercial --clean --if-exi
 
 Pruebe periódicamente la restauración en un ambiente diferente. Un respaldo no probado no debe considerarse confiable.
 
-## 16. Actualización segura
+## 17. Actualización segura
 
 1. Cree respaldo de PostgreSQL.
 2. Guarde `.env` y los recursos gráficos.
-3. Obtenga la nueva versión.
+3. Ejecute `git fetch origin --prune` y compruebe la divergencia de la rama.
 4. Revise cambios de `.env.example`.
-5. Ejecute pruebas.
-6. Reconstruya:
+5. Ejecute sintaxis, pruebas y auditoría.
+6. Publique y revise primero en el entorno de pruebas.
+7. Espere aprobación explícita.
+8. Vuelva a comprobar que no existan cambios remotos pendientes.
+9. Fusione a `main` y reconstruya producción:
 
 ```powershell
 docker compose up -d --build
 ```
 
-7. Compruebe:
+10. Compruebe:
 
 ```powershell
 docker compose ps
 Invoke-RestMethod https://su-dominio.com/health
 ```
 
-8. Verifique manualmente página, portal, CRM, autenticación y cotizaciones.
+11. Verifique manualmente página, portal, CRM, autenticación y cotizaciones.
+12. Si la validación falla, detenga la promoción y aplique el procedimiento de reversión.
 
-## 17. Seguridad antes de producción
+## 18. Seguridad antes de producción
 
 - Cambiar todas las claves predeterminadas.
 - Usar contraseñas únicas y largas.
@@ -505,8 +643,12 @@ Invoke-RestMethod https://su-dominio.com/health
 - Implementar monitoreo y alertas.
 - Rotar tokens SMTP, WhatsApp y pagos.
 - Revisar logs sin exponer información sensible.
+- Mantener separados los secretos y volúmenes de pruebas y producción.
+- Confirmar que el entorno de pruebas tenga `noindex` y `no-store`.
+- Exigir Security CI aprobado y revisión humana antes de fusionar.
+- Verificar que el favicon y los recursos públicos estén expresamente permitidos.
 
-## 18. Solución de problemas
+## 19. Solución de problemas
 
 ### Puerto 4100 ocupado
 
@@ -527,6 +669,10 @@ docker compose ps
 docker compose logs api --tail 200
 docker compose logs postgres --tail 200
 ```
+
+En el primer arranque de una base nueva, PostgreSQL realiza un reinicio interno al
+terminar las migraciones. Si la API intentó conectarse durante esa ventana y salió,
+confirme primero que PostgreSQL esté saludable y reinicie únicamente `api`.
 
 ### Correos no llegan
 
@@ -558,7 +704,25 @@ La página está configurada para usar el cursor normal. Si desaparece:
 - Revise permisos del volumen Docker.
 - No elimine el volumen sin respaldo.
 
-## 19. Lista de verificación de publicación
+Si una base nueva basada en `postgres:16-alpine` falla con un error de collation
+ICU, use en pruebas la sobrescritura `docker-compose.test.yml`, que selecciona
+`postgres:16-bookworm`. No cambie la imagen productiva durante esta corrección.
+
+### PostgreSQL no puede leer las migraciones
+
+Si aparece `Permission denied` para `/docker-entrypoint-initdb.d`, compruebe que los
+directorios `sql/` permitan recorrido (`755`) y los archivos `.sql` lectura (`644`).
+No relaje los permisos de `.env`.
+
+### HTTPS del subdominio de pruebas no inicia
+
+- Confirme que `test-infrasec.dev-fmv.duckdns.org` resuelva a la IP pública correcta.
+- Valide el Caddyfile antes de instalarlo.
+- Revise los logs del contenedor Caddy.
+- Confirme que el contenedor montó la versión actual del archivo.
+- Valide nuevamente producción después de cualquier recreación del proxy.
+
+## 20. Lista de verificación de publicación
 
 - [ ] Dominio resuelve a la IP correcta.
 - [ ] HTTPS válido y renovación automática.
@@ -575,8 +739,16 @@ La página está configurada para usar el cursor normal. Si desaparece:
 - [ ] Página, portal y CRM revisados.
 - [ ] Logo definitivo e imágenes optimizadas.
 - [ ] Política de privacidad y datos de contacto reales.
+- [ ] Rama sincronizada con GitHub antes de iniciar y antes de fusionar.
+- [ ] Pull request y Security CI aprobados.
+- [ ] Cambio desplegado y revisado en la URL `test-`.
+- [ ] Banner visible únicamente en pruebas.
+- [ ] Favicon visible en las páginas públicas.
+- [ ] Archivos internos responden `404` desde Internet.
+- [ ] Aprobación explícita recibida antes de fusionar.
+- [ ] Producción validada después del despliegue.
 
-## 20. Soporte
+## 21. Soporte
 
 Al reportar un problema incluya:
 
