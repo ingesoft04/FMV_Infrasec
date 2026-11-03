@@ -62,6 +62,31 @@ test('portales, imágenes y API continúan disponibles', async () => {
   await Promise.all(rutas.map(obtener));
 });
 
+test('el catálogo de modelos, filtros y demostraciones están conectados', async () => {
+  const main = await (await obtener('fmv-infrasec.html')).text();
+  assert.match(main, /id="modelos"/);
+  assert.match(main, /Encuentra un diseño para tu negocio/);
+  assert.match(main, /href="\/modelos"/);
+
+  const catalog = await (await obtener('modelos')).text();
+  assert.match(catalog, /data-models-search/);
+  assert.match(catalog, /data-models-filter/);
+  assert.match(catalog, /data-models-catalog/);
+
+  const data = await (await obtener('assets/models/models.js')).text();
+  for (const value of ['Psicología', 'Joyería', 'Restaurante', 'Serviteca', 'Maquillaje', 'Espacio Sereno']) {
+    assert.match(data, new RegExp(value));
+  }
+  for (const slug of ['psicologia', 'joyeria', 'restaurante', 'serviteca', 'maquillaje']) {
+    const demo = await (await obtener(`modelos/${slug}`)).text();
+    assert.match(demo, /Este es un modelo demostrativo/);
+    assert.match(demo, /Quiero este modelo/);
+    assert.match(demo, /Volver a todos los modelos/);
+  }
+  const portal = await (await obtener('portal-comercial.html?modelo=psicologia')).text();
+  assert.match(portal, /portal-interest\.js/);
+});
+
 test('archivos internos del servidor no quedan expuestos públicamente', async () => {
   for (const route of ['src/app.js', 'sql/init.sql', 'package.json', 'docker-compose.yml', '.env.example']) {
     const response = await fetch(`${BASE}/${route}`);
