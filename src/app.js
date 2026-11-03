@@ -8,6 +8,7 @@ const authRoutes = require('./http/routes/authRoutes');
 const commercialRoutes = require('./http/routes/commercialRoutes');
 const adminRoutes = require('./http/routes/adminRoutes');
 const staffRoutes = require('./http/routes/staffRoutes');
+const models = require('../assets/models/models');
 
 module.exports = (container) => {
   const app = express();
@@ -51,10 +52,16 @@ module.exports = (container) => {
   }));
   for (const page of [
     'fmv-infrasec.html', 'portal-comercial.html', 'admin-comercial.html',
-    'gestion-asesorias.html', 'fmv-guia-instalacion.html'
+    'gestion-asesorias.html', 'fmv-guia-instalacion.html', 'modelos.html'
   ]) {
     app.get(`/${page}`, (_req, res) => res.sendFile(path.join(container.config.root, page)));
   }
+  app.get('/modelos', (_req, res) => res.sendFile(path.join(container.config.root, 'modelos.html')));
+  const modelSlugs = new Set(models.map((model) => model.slug));
+  app.get('/modelos/:slug', (req, res, next) => {
+    if (!modelSlugs.has(req.params.slug)) return next();
+    return res.sendFile(path.join(container.config.root, 'modelo.html'));
+  });
   app.get('/health', async (_req, res) => {
     try {
       await container.db.query('SELECT 1');

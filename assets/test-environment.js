@@ -10,8 +10,9 @@
   style.textContent = `
     :root { --test-banner-height: 44px; }
     body { padding-top: var(--test-banner-height) !important; }
-    .top { top: var(--test-banner-height) !important; }
+    .top, .demo-banner { top: var(--test-banner-height) !important; }
     #test-environment-banner {
+      box-sizing: border-box;
       position: fixed;
       inset: 0 0 auto 0;
       z-index: 2147483647;
