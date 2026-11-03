@@ -543,8 +543,10 @@ docker compose -p fmv_infrasec_test \
   up -d --build --wait
 ```
 
-La sobrescritura de pruebas aplica `restart: unless-stopped` a la API y PostgreSQL,
-para que ambos servicios regresen automáticamente después de reiniciar la VM.
+La configuración base aplica `restart: unless-stopped` a la API y PostgreSQL en
+ambos entornos, para que los servicios regresen automáticamente después de
+reiniciar la VM. Una prueba automatizada impide retirar accidentalmente esta
+protección del archivo Compose.
 
 Los scripts SQL no contienen secretos y deben ser legibles por el usuario interno
 de PostgreSQL (`755` para sus directorios y `644` para archivos `.sql`). El `.env`
