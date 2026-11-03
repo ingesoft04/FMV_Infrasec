@@ -1,5 +1,7 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
 const validateConfiguration = require('../src/config/validate');
 
 function secureConfiguration() {
@@ -54,4 +56,14 @@ test('permite retirar claves iniciales después del bootstrap', () => {
     POSTGRES_PASSWORD: 'postgres-segura-2026',
     DATABASE_URL: 'postgres://fmv:secreto@postgres:5432/fmv'
   }));
+});
+
+test('Docker reinicia la API y PostgreSQL después de reiniciar el servidor', () => {
+  const compose = fs.readFileSync(path.resolve(__dirname, '..', 'docker-compose.yml'), 'utf8');
+  const services = compose.split(/^  (?=api:|postgres:)/m).slice(1);
+
+  assert.equal(services.length, 2);
+  for (const service of services) {
+    assert.match(service, /restart: unless-stopped/);
+  }
 });
