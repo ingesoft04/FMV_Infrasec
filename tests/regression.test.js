@@ -43,6 +43,7 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.match(html, /assets\/images\/hero-ciberseguridad\.png/);
   assert.match(html, /assets\/images\/equipo-consultoria\.png/);
   assert.match(html, /assets\/brand\/logo-dark-background\.webp/);
+  assert.match(html, /mix-blend-mode:\s*screen/);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 

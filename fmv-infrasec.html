@@ -101,6 +101,7 @@
     width: 168px;
     height: auto;
     display: block;
+    mix-blend-mode: screen;
     filter: drop-shadow(0 0 8px rgba(0,196,204,0.4));
   }
 
@@ -678,7 +679,12 @@
   .footer-logo {
     display: flex; align-items: center; gap: 0.75rem;
   }
-  .footer-logo img { width: 190px; height: auto; opacity: 0.86; }
+  .footer-logo img {
+    width: 190px;
+    height: auto;
+    opacity: 0.86;
+    mix-blend-mode: screen;
+  }
 
   .footer-links {
     display: flex; gap: 2.5rem; list-style: none;
