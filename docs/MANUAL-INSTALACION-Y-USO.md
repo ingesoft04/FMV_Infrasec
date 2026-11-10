@@ -490,11 +490,19 @@ Las imágenes están en:
 assets/images/
 ```
 
-El logo está en:
+Los logos están en:
 
 ```text
 assets/brand/
 ```
+
+- `logo-dark-background.webp`: versión blanca para navegación, pie y demás fondos oscuros.
+- `logo-light-background.webp`: versión oscura para fondos claros.
+- `logo-temporal.svg`: recurso anterior conservado por compatibilidad.
+
+No intercambie las variantes: mantener el contraste correcto protege la legibilidad
+de la marca. Ambas imágenes están optimizadas en WebP y contienen símbolo, nombre y
+lema corporativo; no agregue nuevamente el nombre como texto junto al logo.
 
 El favicon corporativo es `assets/brand/favicon.svg`. Todas las páginas públicas
 deben declarar ese archivo en su `<head>`. Después de reemplazarlo, recargue el

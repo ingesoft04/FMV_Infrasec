@@ -75,7 +75,8 @@ test('solo publica páginas y activos expresamente permitidos', async (t) => {
 
   for (const route of [
     '/fmv-infrasec.html', '/portal-comercial.html', '/modelos', '/modelos/psicologia',
-    '/assets/brand/logo-temporal.svg', '/assets/brand/favicon.svg', '/assets/test-environment.js',
+    '/assets/brand/logo-temporal.svg', '/assets/brand/logo-dark-background.webp',
+    '/assets/brand/logo-light-background.webp', '/assets/brand/favicon.svg', '/assets/test-environment.js',
     '/assets/models/models.js', '/assets/models/models-ui.js', '/assets/models/portal-interest.js', '/assets/models/models.css',
     '/assets/models/previews/psicologia.svg'
   ]) {

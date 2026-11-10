@@ -39,6 +39,7 @@ pruebas esté pendiente.
 - Endpoints administrativos para revisar oportunidades y actualizar su estado.
 - PostgreSQL, autenticación JWT, rate limiting, Docker y página web integrada.
 - Favicon corporativo y marcador visual exclusivo del entorno de pruebas.
+- Logo corporativo optimizado con variantes específicas para fondos claros y oscuros.
 - Catálogo ampliable de modelos web con búsqueda, filtros y demostraciones por categoría.
 
 ## Modelos de páginas web

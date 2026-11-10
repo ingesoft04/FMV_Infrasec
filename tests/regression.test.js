@@ -42,7 +42,7 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.match(html, /\.services-grid\s*\{[^}]*gap:\s*1rem/s);
   assert.match(html, /assets\/images\/hero-ciberseguridad\.png/);
   assert.match(html, /assets\/images\/equipo-consultoria\.png/);
-  assert.match(html, /assets\/brand\/logo-temporal\.svg/);
+  assert.match(html, /assets\/brand\/logo-dark-background\.webp/);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 
@@ -53,7 +53,8 @@ test('portales, imágenes y API continúan disponibles', async () => {
     'gestion-asesorias.html',
     'assets/images/hero-ciberseguridad.png',
     'assets/images/equipo-consultoria.png',
-    'assets/brand/logo-temporal.svg',
+    'assets/brand/logo-dark-background.webp',
+    'assets/brand/logo-light-background.webp',
     'health',
     'api/productos',
     'api/consultores',
