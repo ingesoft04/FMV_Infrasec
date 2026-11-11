@@ -1014,6 +1014,92 @@
     opacity: 1;
     transform: none;
   }
+
+  /* Progressive disclosure: keep the first reading calm and reveal depth on demand. */
+  .hero {
+    min-height: 680px;
+    padding-bottom: 5rem;
+  }
+  .hero-content { position: relative; z-index: 2; max-width: 610px; }
+  .hero-visual {
+    opacity: 0.46;
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.45) 42%, #000 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.45) 42%, #000 100%);
+  }
+  .hero-badge { margin-bottom: 1.6rem; }
+  .intro-company,
+  .process-section,
+  #modelos { background: rgba(255,255,255,0.015); }
+  section { padding-top: 5.5rem; padding-bottom: 5.5rem; }
+  .services-grid:not(.is-expanded) .service-card:nth-child(n+4),
+  .industries-grid:not(.is-expanded) .industry-card:nth-child(n+5) { display: none; }
+  .content-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem auto 0;
+    min-height: 44px;
+    padding: .72rem 1.25rem;
+    border: 1px solid rgba(0,196,204,.38);
+    border-radius: 999px;
+    background: rgba(0,196,204,.06);
+    color: var(--cyan);
+    font: 700 .82rem/1 var(--font-heading);
+    cursor: pointer;
+  }
+  .content-toggle:hover { background: rgba(0,196,204,.12); }
+  .whatsapp-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 120;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 48px;
+    padding: .72rem 1rem;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    background: #1f9d61;
+    color: #fff;
+    font: 700 .82rem/1 var(--font-heading);
+    text-decoration: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,.34);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .whatsapp-fab:hover { transform: translateY(-2px); background: #168451; }
+  .whatsapp-fab span:first-child { font-size: 1.15rem; }
+  .disclosure-block {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    background: rgba(5,12,28,.42);
+  }
+  .disclosure-block > summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: min(760px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 1.35rem 0;
+    color: rgba(255,255,255,.82);
+    font: 700 .92rem/1.3 var(--font-heading);
+    cursor: pointer;
+    list-style: none;
+  }
+  .disclosure-block > summary::-webkit-details-marker { display: none; }
+  .disclosure-block > summary span {
+    color: var(--cyan);
+    font-size: 1.35rem;
+    transition: transform .2s ease;
+  }
+  .disclosure-block[open] > summary span { transform: rotate(45deg); }
+  .disclosure-block[open] > summary { border-bottom: 1px solid var(--border); }
+  .disclosure-block > section { background: transparent !important; }
+  .compact-disclosure .ai-banner { margin-top: 2rem; margin-bottom: 2rem; }
+  .technical-detail .tech-track { animation-play-state: paused; }
+  .technical-detail[open] .tech-track { animation-play-state: running; }
+
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
   }
@@ -1021,7 +1107,7 @@
   @media (max-width: 1024px) {
     nav { padding: 1.2rem 2rem; }
     .nav-links { display: none; }
-    .hero { padding: 8rem 2.5rem 5rem; }
+    .hero { min-height: auto; padding: 8rem 2.5rem 5rem; }
     .hero-visual { display: none; }
     .stats-bar { grid-template-columns: repeat(2, 1fr); padding: 2.5rem 2rem; }
     section { padding: 5rem 2.5rem; }
@@ -1033,6 +1119,8 @@
     .industries-grid { grid-template-columns: repeat(2, 1fr); }
     .cta-section { padding: 6rem 2.5rem; }
     footer { padding: 2.5rem; flex-direction: column; align-items: flex-start; }
+    .whatsapp-fab { width: 48px; padding: 0; justify-content: center; }
+    .whatsapp-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   }
 </style>
 </head>
@@ -1040,6 +1128,10 @@
 
 <div class="bg-mesh"></div>
 <div class="bg-grid"></div>
+
+<a class="whatsapp-fab" href="https://wa.me/573025286029?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20servicios%20de%20FMV%20InfraSec." target="_blank" rel="noopener noreferrer" aria-label="Escribir a FMV InfraSec por WhatsApp">
+  <span aria-hidden="true">💬</span><span class="whatsapp-fab-label">WhatsApp</span>
+</a>
 
 <!-- NAV -->
 <nav>
@@ -1049,9 +1141,6 @@
   <ul class="nav-links">
     <li><a href="#servicios">Servicios</a></li>
     <li><a href="#modelos">Modelos</a></li>
-    <li><a href="#arquitectura">Arquitectura</a></li>
-    <li><a href="#stack">Stack</a></li>
-    <li><a href="#sectores">Sectores</a></li>
     <li><a href="#contacto" class="nav-cta">Hablar con un experto</a></li>
   </ul>
 </nav>
@@ -1059,15 +1148,15 @@
 <!-- HERO -->
 <section class="hero">
   <div class="hero-content">
-    <div class="hero-badge">Seguridad · Desarrollo · IA · Infraestructura</div>
+    <div class="hero-badge">Ciberseguridad e infraestructura</div>
     <h1>
       Tecnología segura
       <span class="line2">para empresas que avanzan.</span>
     </h1>
-    <p>Ayudamos a empresas a reducir riesgos, modernizar su infraestructura y construir soluciones digitales confiables. Integramos ciberseguridad, software, nube, automatización y acompañamiento técnico en un solo equipo.</p>
+    <p>Protegemos y modernizamos la tecnología de tu empresa con soluciones claras, seguras y adaptadas a tu operación.</p>
     <div class="hero-actions">
       <a href="portal-comercial.html" class="btn-primary">Solicitar asesoría →</a>
-      <a href="#servicios" class="btn-ghost">Ver servicios</a>
+      <a href="#servicios" class="btn-ghost">Conocer soluciones</a>
     </div>
   </div>
 
@@ -1079,36 +1168,15 @@
   </div>
 </section>
 
-<!-- STATS -->
-<div class="stats-bar">
-  <div class="stat-item">
-    <div class="stat-num">01</div>
-    <div class="stat-label">Diagnóstico del contexto</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">02</div>
-    <div class="stat-label">Propuesta priorizada</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">03</div>
-    <div class="stat-label">Implementación segura</div>
-  </div>
-  <div class="stat-item">
-    <div class="stat-num">04</div>
-    <div class="stat-label">Medición y mejora</div>
-  </div>
-</div>
-
 <section class="intro-company">
   <div class="reveal">
     <p class="section-label">Quiénes somos</p>
-    <h2 class="section-title">Un aliado técnico para decisiones que no pueden fallar</h2>
-    <p class="section-sub">FMV InfraSec reúne capacidades de seguridad, desarrollo e infraestructura para resolver necesidades empresariales de principio a fin, con lenguaje claro y entregables verificables.</p>
+    <h2 class="section-title">Un solo equipo para proteger y hacer avanzar tu negocio</h2>
+    <p class="section-sub">Reunimos seguridad, desarrollo e infraestructura para convertir necesidades complejas en decisiones claras y resultados verificables.</p>
     <ul class="intro-list">
       <li>Evaluamos riesgos y oportunidades antes de proponer tecnología.</li>
       <li>Diseñamos soluciones ajustadas al tamaño y operación de cada empresa.</li>
-      <li>Entregamos documentación, acompañamiento y transferencia de conocimiento.</li>
-      <li>Centralizamos asesorías, cotizaciones, pagos y seguimiento comercial.</li>
+      <li>Acompañamos la implementación y dejamos conocimiento en tu equipo.</li>
     </ul>
   </div>
   <img class="reveal" src="assets/images/equipo-consultoria.png" alt="Equipo especializado colaborando en una solución de ciberseguridad">
@@ -1119,9 +1187,9 @@
   <div class="services-header reveal">
     <div>
       <p class="section-label">Lo que hacemos</p>
-      <h2 class="section-title">Un ecosistema completo de soluciones tech</h2>
+      <h2 class="section-title">Soluciones para tus prioridades reales</h2>
     </div>
-    <p class="section-sub">No somos solo seguridad. Somos el equipo técnico extendido que acompaña a tu organización desde la arquitectura hasta la producción.</p>
+    <p class="section-sub">Empieza por lo que necesitas hoy. Podemos ampliar el alcance cuando tu operación lo requiera.</p>
   </div>
 
   <div class="services-grid reveal">
@@ -1187,9 +1255,12 @@
       </div>
     </div>
   </div>
+  <button class="content-toggle" type="button" data-toggle-cards="services" aria-expanded="false">Ver todas las soluciones</button>
 </section>
 
 <!-- SECURITY FOCUS -->
+<details class="disclosure-block">
+  <summary>Conocer nuestro enfoque de seguridad <span>+</span></summary>
 <section id="seguridad" style="background: rgba(0,196,204,0.02); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
   <div class="feature-split">
     <div class="feature-visual reveal">
@@ -1232,6 +1303,7 @@
     </div>
   </div>
 </section>
+</details>
 
 <!-- PROCESO -->
 <section id="proceso" class="process-section">
@@ -1271,6 +1343,8 @@
 </section>
 
 <!-- TECH STACK -->
+<details class="disclosure-block technical-detail">
+  <summary>Ver tecnologías que dominamos <span>+</span></summary>
 <section class="tech-section" style="padding-bottom: 3rem;">
   <div class="reveal" style="text-align: center;">
     <p class="section-label">Tecnologías</p>
@@ -1324,6 +1398,7 @@
     </div>
   </div>
 </section>
+</details>
 
 <!-- SECTORES -->
 <section id="sectores">
@@ -1375,9 +1450,12 @@
       <p>Seguridad ágil desde la etapa temprana de producto</p>
     </div>
   </div>
+  <button class="content-toggle" type="button" data-toggle-cards="industries" aria-expanded="false">Ver todos los sectores</button>
 </section>
 
 <!-- AI COMING SOON BANNER -->
+<details class="disclosure-block compact-disclosure">
+  <summary>Conocer próximas capacidades de automatización <span>+</span></summary>
 <div class="ai-banner reveal">
   <div class="ai-banner-icon">🤖</div>
   <div class="ai-banner-text">
@@ -1391,8 +1469,11 @@
     <span class="ai-pill">Próximamente</span>
   </div>
 </div>
+</details>
 
 <!-- ARQUITECTURA -->
+<details class="disclosure-block technical-detail">
+  <summary>Consultar arquitectura e infraestructura <span>+</span></summary>
 <section id="arquitectura" class="arch-section">
   <div class="reveal" style="text-align:center;">
     <p class="section-label">Arquitectura del sistema</p>
@@ -1497,6 +1578,7 @@
     </div>
   </div>
 </section>
+</details>
 
 <!-- MODELOS DE PÁGINAS WEB -->
 <section id="modelos">
@@ -1510,6 +1592,8 @@
 </section>
 
 <!-- STACK TECNOLÓGICO -->
+<details class="disclosure-block technical-detail">
+  <summary>Consultar stack tecnológico completo <span>+</span></summary>
 <section id="stack">
   <div class="reveal" style="text-align:center;">
     <p class="section-label">Stack tecnológico</p>
@@ -1568,6 +1652,7 @@
     </div>
   </div>
 </section>
+</details>
 
 <!-- CTA -->
 <section class="cta-section" id="contacto">
@@ -1576,7 +1661,7 @@
   <p>Cuéntanos sobre tu empresa, elige el producto o servicio que necesitas y te conectamos con el consultor adecuado. Sin compromisos, sin costos ocultos.</p>
   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
     <a href="portal-comercial.html" class="btn-primary">Agendar asesoría comercial →</a>
-    <a href="tel:+57000000000" class="btn-ghost">📞 Llamar ahora</a>
+    <a href="https://wa.me/573025286029?text=Hola%2C%20quiero%20solicitar%20una%20asesor%C3%ADa%20con%20FMV%20InfraSec." class="btn-ghost" target="_blank" rel="noopener noreferrer">💬 Escribir por WhatsApp</a>
   </div>
 </section>
 
@@ -1596,6 +1681,23 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const cardToggles = {
+    services: document.querySelector('.services-grid'),
+    industries: document.querySelector('.industries-grid')
+  };
+
+  document.querySelectorAll('[data-toggle-cards]').forEach(button => {
+    button.addEventListener('click', () => {
+      const target = cardToggles[button.dataset.toggleCards];
+      if (!target) return;
+      const expanded = target.classList.toggle('is-expanded');
+      button.setAttribute('aria-expanded', String(expanded));
+      button.textContent = expanded
+        ? (button.dataset.toggleCards === 'services' ? 'Mostrar menos soluciones' : 'Mostrar menos sectores')
+        : (button.dataset.toggleCards === 'services' ? 'Ver todas las soluciones' : 'Ver todos los sectores');
+    });
+  });
+
   // Compatibilidad: el contenido es visible por defecto.
   const revealEls = document.querySelectorAll('.reveal');
   revealEls.forEach(el => el.classList.add('visible'));
