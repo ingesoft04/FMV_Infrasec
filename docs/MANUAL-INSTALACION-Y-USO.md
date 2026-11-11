@@ -486,6 +486,13 @@ El canal comercial de WhatsApp se publica en formato internacional mediante
 secundaria en la sección de contacto, ambos con un mensaje inicial y apertura segura
 en una pestaña nueva.
 
+El acabado visual de la página utiliza iconos SVG monocromáticos para los servicios,
+identificadores tipográficos para sectores y una única paleta cian de acento. Al
+cargar JavaScript, los bloques técnicos se trasladan a un solo desplegable llamado
+**Información técnica y capacidades avanzadas**; sin JavaScript, cada bloque sigue
+disponible como un elemento `details` independiente. Esta mejora progresiva evita
+ocultar información cuando el navegador limita scripts.
+
 ### 14.1 Portal interno de asesores y SA
 
 Acceda a `http://localhost:4100/gestion-asesorias.html`.

@@ -52,6 +52,10 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.doesNotMatch(html, /class="stats-bar"/);
   assert.match(html, /https:\/\/wa\.me\/573025286029/);
   assert.match(html, /aria-label="Escribir a FMV InfraSec por WhatsApp"/);
+  assert.match(html, /Información técnica y capacidades avanzadas/);
+  assert.match(html, /className = 'technical-panel'/);
+  assert.match(html, /class="service-icon"><svg/);
+  assert.doesNotMatch(html, /class="service-icon">[🔐🧩🏗📋⚙🤖]/u);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 

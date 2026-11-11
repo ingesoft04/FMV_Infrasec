@@ -13,14 +13,14 @@
   :root {
     --navy: #0d1f4e;
     --blue: #1a3a8f;
-    --cyan: #00c4cc;
-    --teal: #0891b2;
+    --cyan: #38c6cf;
+    --teal: #15919a;
     --light-cyan: #67e8f9;
     --white: #f8fafc;
     --gray: #94a3b8;
-    --dark: #060e24;
+    --dark: #07111f;
     --card-bg: rgba(255,255,255,0.03);
-    --border: rgba(0,196,204,0.15);
+    --border: rgba(255,255,255,0.10);
     --font-body: "Segoe UI Variable Text", "Segoe UI", Roboto, Arial, sans-serif;
     --font-heading: "Segoe UI Variable Display", "Segoe UI", Roboto, Arial, sans-serif;
   }
@@ -1100,6 +1100,146 @@
   .technical-detail .tech-track { animation-play-state: paused; }
   .technical-detail[open] .tech-track { animation-play-state: running; }
 
+  /* Premium visual system */
+  .bg-grid { opacity: .26; background-size: 72px 72px; }
+  .bg-mesh {
+    background:
+      radial-gradient(ellipse 70% 50% at 18% 8%, rgba(56,198,207,.07), transparent 64%),
+      radial-gradient(ellipse 55% 65% at 88% 72%, rgba(21,145,154,.055), transparent 68%);
+  }
+  nav {
+    padding-block: .9rem;
+    background: rgba(7,17,31,.84);
+    border-color: rgba(255,255,255,.08);
+  }
+  .nav-cta { border-radius: 999px; }
+  .hero { min-height: 640px; }
+  .hero-visual { opacity: .36; filter: saturate(.78) contrast(1.04); }
+  .hero-badge {
+    background: transparent;
+    border-color: rgba(255,255,255,.14);
+    color: rgba(255,255,255,.68);
+    letter-spacing: .09em;
+  }
+  .hero-badge::before { animation: none; background: var(--cyan); }
+  .hero h1 .line2 {
+    background: none;
+    color: var(--cyan);
+    -webkit-text-fill-color: currentColor;
+  }
+  .btn-primary {
+    background: var(--cyan);
+    border-radius: 999px;
+    box-shadow: 0 8px 24px rgba(56,198,207,.14);
+  }
+  .btn-primary:hover { box-shadow: 0 10px 28px rgba(56,198,207,.2); }
+  .btn-ghost { border-radius: 999px; }
+  .intro-company img {
+    border-radius: 10px;
+    border-color: rgba(255,255,255,.09);
+    box-shadow: 0 18px 45px rgba(0,0,0,.24);
+    filter: saturate(.78) contrast(1.03);
+  }
+  .services-grid {
+    gap: 1rem;
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    overflow: visible;
+  }
+  .service-card {
+    padding: 2.25rem;
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 12px;
+    background: rgba(255,255,255,.025);
+  }
+  .service-card::before { display: none; }
+  .service-card:hover { background: rgba(255,255,255,.045); }
+  .service-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 10px;
+    background: rgba(56,198,207,.07);
+    border-color: rgba(56,198,207,.2);
+    color: var(--cyan);
+  }
+  .service-icon svg {
+    width: 23px;
+    height: 23px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.65;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .service-card:hover .service-icon { transform: none; background: rgba(56,198,207,.1); }
+  .service-card p { line-height: 1.68; }
+  .tag { background: transparent; border-color: rgba(255,255,255,.1); color: rgba(255,255,255,.58); }
+  .process-steps::before { opacity: .45; }
+  .step:hover .step-num { transform: none; }
+  .industries-grid { gap: .85rem; }
+  .industry-card {
+    padding: 1.5rem;
+    border-color: rgba(255,255,255,.09);
+    border-radius: 10px;
+    text-align: left;
+  }
+  .industry-card:hover { transform: none; border-color: rgba(56,198,207,.25); }
+  .industry-icon {
+    display: inline-flex;
+    width: 34px;
+    height: 34px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: .9rem;
+    border: 1px solid rgba(56,198,207,.22);
+    border-radius: 8px;
+    color: var(--cyan);
+    font: 750 .68rem/1 var(--font-heading);
+    letter-spacing: .08em;
+  }
+  .ai-banner { box-shadow: none; background: rgba(255,255,255,.025); }
+  .ai-banner-icon {
+    display: inline-flex;
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(56,198,207,.24);
+    border-radius: 10px;
+    color: var(--cyan);
+    font: 800 .78rem/1 var(--font-heading);
+    letter-spacing: .08em;
+    animation: none;
+  }
+  .tech-track { animation: none !important; }
+  .disclosure-block { background: rgba(255,255,255,.012); }
+  .disclosure-block > summary { color: rgba(255,255,255,.72); }
+  .cta-section { background: rgba(255,255,255,.018); padding-block: 7rem; }
+  .whatsapp-fab {
+    width: 52px;
+    min-height: 52px;
+    justify-content: center;
+    padding: 0;
+    background: #188b58;
+    border-color: rgba(255,255,255,.2);
+    box-shadow: 0 10px 28px rgba(0,0,0,.28);
+  }
+  .whatsapp-fab svg { width: 24px; height: 24px; fill: currentColor; }
+  .whatsapp-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .technical-hub { margin-top: 1rem; border-bottom: 1px solid var(--border); }
+  .technical-hub-content { border-top: 1px solid var(--border); }
+  .technical-panel + .technical-panel { border-top: 1px solid rgba(255,255,255,.08); }
+  .technical-panel-title {
+    width: min(1100px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 2.5rem 0 0;
+    color: var(--cyan);
+    font: 750 .75rem/1.3 var(--font-heading);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .reveal { opacity: 1; transform: none; transition: none; }
   }
@@ -1130,7 +1270,7 @@
 <div class="bg-grid"></div>
 
 <a class="whatsapp-fab" href="https://wa.me/573025286029?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20servicios%20de%20FMV%20InfraSec." target="_blank" rel="noopener noreferrer" aria-label="Escribir a FMV InfraSec por WhatsApp">
-  <span aria-hidden="true">💬</span><span class="whatsapp-fab-label">WhatsApp</span>
+  <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.5 11.7a8.5 8.5 0 0 1-12.6 7.5L3 20.5l1.3-4.7A8.5 8.5 0 1 1 20.5 11.7Zm-8.4-6.8a6.8 6.8 0 0 0-5.8 10.4l.3.5-.7 2.3 2.4-.6.5.3a6.8 6.8 0 1 0 3.3-12.9Zm-2 3.1c.2 0 .3 0 .4.3l.7 1.6c.1.2 0 .4-.1.6l-.5.6c-.2.2-.1.4 0 .6.5.9 1.2 1.6 2.1 2.1.3.2.5.2.7 0l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.3.2.3.4 0 .5-.2 1.2-.6 1.6-.5.5-1.2.8-2 .7-1.1-.1-2.6-.7-4.2-2.1-1.3-1.2-2.2-2.6-2.4-3.8-.2-.9.1-1.7.6-2.2.3-.3.7-.4 1.1-.4Z"/></svg><span class="whatsapp-fab-label">WhatsApp</span>
 </a>
 
 <!-- NAV -->
@@ -1194,7 +1334,7 @@
 
   <div class="services-grid reveal">
     <div class="service-card">
-      <div class="service-icon">🔐</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 2.8 8.3 7 10 4.2-1.7 7-5.4 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg></div>
       <h3>Auditoría de Seguridad</h3>
       <p>Evaluamos tu infraestructura con metodologías OWASP, NIST y PTES. Identificamos vulnerabilidades antes de que lo hagan los atacantes.</p>
       <div class="service-tags">
@@ -1204,7 +1344,7 @@
       </div>
     </div>
     <div class="service-card">
-      <div class="service-icon">🧩</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg></div>
       <h3>Desarrollo de Software</h3>
       <p>Construimos aplicaciones web, móviles y sistemas backend seguros desde el diseño. DevSecOps integrado en cada línea de código.</p>
       <div class="service-tags">
@@ -1214,7 +1354,7 @@
       </div>
     </div>
     <div class="service-card">
-      <div class="service-icon">🏗️</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 18a4 4 0 0 1 .6-8A6 6 0 0 1 18 8a5 5 0 0 1 0 10H6Z"/><path d="M9 14h6M12 11v6"/></svg></div>
       <h3>Infraestructura Cloud</h3>
       <p>Diseñamos, migramos y gestionamos arquitecturas en AWS, Azure y GCP. Escalabilidad, resiliencia y costos optimizados.</p>
       <div class="service-tags">
@@ -1224,7 +1364,7 @@
       </div>
     </div>
     <div class="service-card">
-      <div class="service-icon">📋</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 4h10v16H7zM9 4V2h6v2M10 9h4M10 13h4M10 17h3"/></svg></div>
       <h3>Consultoría en Cumplimiento</h3>
       <p>Te guiamos hacia ISO 27001, SOC 2, GDPR, Ley 1581. Políticas, procedimientos y capacitación para tu equipo.</p>
       <div class="service-tags">
@@ -1234,7 +1374,7 @@
       </div>
     </div>
     <div class="service-card">
-      <div class="service-icon">⚙️</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M19 5l-2 2M7 17l-2 2"/></svg></div>
       <h3>DevOps & Automatización</h3>
       <p>Pipelines CI/CD, contenedores, orquestación con Kubernetes. Entregas rápidas, estables y con zero downtime.</p>
       <div class="service-tags">
@@ -1245,7 +1385,7 @@
     </div>
     <div class="service-card" style="position:relative; overflow:hidden;">
       <div style="position:absolute;top:1rem;right:1rem;background:linear-gradient(135deg,rgba(0,196,204,0.15),rgba(103,232,249,0.1));border:1px solid rgba(0,196,204,0.3);color:var(--cyan);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.2rem 0.6rem;border-radius:100px;">Próximamente</div>
-      <div class="service-icon">🤖</div>
+      <div class="service-icon"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M7 8h10a3 3 0 0 1 3 3v7H4v-7a3 3 0 0 1 3-3ZM12 8V5M10 5h4M8 13h.01M16 13h.01M9 16h6"/></svg></div>
       <h3>Automatización con IA</h3>
       <p>Flujos inteligentes con Claude, Gemini y N8N integrados directamente en tu web y procesos internos. Desde chatbots hasta pipelines de datos autónomos.</p>
       <div class="service-tags">
@@ -1410,42 +1550,42 @@
 
   <div class="industries-grid reveal">
     <div class="industry-card">
-      <span class="industry-icon">🏦</span>
+      <span class="industry-icon" aria-hidden="true">FN</span>
       <h4>Fintech & Banca</h4>
       <p>PCI-DSS, fraude digital y seguridad de transacciones</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🏥</span>
+      <span class="industry-icon" aria-hidden="true">SA</span>
       <h4>Salud</h4>
       <p>Protección de datos clínicos y cumplimiento HIPAA</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🏭</span>
+      <span class="industry-icon" aria-hidden="true">IN</span>
       <h4>Industrial & OT</h4>
       <p>Seguridad en sistemas de control y SCADA</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🛒</span>
+      <span class="industry-icon" aria-hidden="true">RT</span>
       <h4>Retail & eCommerce</h4>
       <p>Protección de datos de clientes y plataformas de pago</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🏛️</span>
+      <span class="industry-icon" aria-hidden="true">GO</span>
       <h4>Gobierno</h4>
       <p>Infraestructura crítica y gestión de identidad digital</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🎓</span>
+      <span class="industry-icon" aria-hidden="true">ED</span>
       <h4>Educación</h4>
       <p>Protección de plataformas e-learning y datos de estudiantes</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">📡</span>
+      <span class="industry-icon" aria-hidden="true">TC</span>
       <h4>Telecomunicaciones</h4>
       <p>Seguridad de redes, DNS y protección contra DDoS</p>
     </div>
     <div class="industry-card">
-      <span class="industry-icon">🚀</span>
+      <span class="industry-icon" aria-hidden="true">ST</span>
       <h4>Startups & Tech</h4>
       <p>Seguridad ágil desde la etapa temprana de producto</p>
     </div>
@@ -1457,7 +1597,7 @@
 <details class="disclosure-block compact-disclosure">
   <summary>Conocer próximas capacidades de automatización <span>+</span></summary>
 <div class="ai-banner reveal">
-  <div class="ai-banner-icon">🤖</div>
+  <div class="ai-banner-icon" aria-hidden="true">AI</div>
   <div class="ai-banner-text">
     <h3>Automatización inteligente — en camino</h3>
     <p>Estamos integrando Claude, Gemini y N8N directamente en nuestra plataforma y en los sitios de nuestros clientes. Flujos autónomos, chatbots contextuales y pipelines de datos impulsados por IA generativa.</p>
@@ -1681,6 +1821,29 @@
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const technicalBlocks = [...document.querySelectorAll('.disclosure-block')];
+  const contactSection = document.querySelector('#contacto');
+  if (technicalBlocks.length && contactSection) {
+    const technicalHub = document.createElement('details');
+    technicalHub.className = 'disclosure-block technical-hub';
+    technicalHub.innerHTML = '<summary>Información técnica y capacidades avanzadas <span>+</span></summary><div class="technical-hub-content"></div>';
+    const technicalContent = technicalHub.querySelector('.technical-hub-content');
+
+    technicalBlocks.forEach(block => {
+      const panel = document.createElement('div');
+      panel.className = 'technical-panel';
+      const title = document.createElement('h3');
+      title.className = 'technical-panel-title';
+      title.textContent = block.querySelector('summary')?.textContent.replace('+', '').trim() || 'Detalle técnico';
+      panel.append(title);
+      [...block.children].filter(child => child.tagName !== 'SUMMARY').forEach(child => panel.append(child));
+      technicalContent.append(panel);
+      block.remove();
+    });
+
+    contactSection.before(technicalHub);
+  }
+
   const cardToggles = {
     services: document.querySelector('.services-grid'),
     industries: document.querySelector('.industries-grid')

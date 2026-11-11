@@ -41,6 +41,7 @@ pruebas esté pendiente.
 - Favicon corporativo y marcador visual exclusivo del entorno de pruebas.
 - Logo corporativo optimizado con variantes específicas para fondos claros y oscuros.
 - Página principal con lectura progresiva: navegación reducida, contenido prioritario y detalles técnicos desplegables.
+- Sistema visual corporativo sobrio con iconografía vectorial, una sola paleta de acento y un centro técnico unificado.
 - Catálogo ampliable de modelos web con búsqueda, filtros y demostraciones por categoría.
 
 ## Modelos de páginas web
