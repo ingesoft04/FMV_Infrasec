@@ -39,6 +39,16 @@ pruebas esté pendiente.
 - Endpoints administrativos para revisar oportunidades y actualizar su estado.
 - PostgreSQL, autenticación JWT, rate limiting, Docker y página web integrada.
 - Favicon corporativo y marcador visual exclusivo del entorno de pruebas.
+- Logo corporativo optimizado con variantes específicas para fondos claros y oscuros.
+- Catálogo ampliable de modelos web con búsqueda, filtros y demostraciones por categoría.
+
+## Modelos de páginas web
+
+La página principal muestra modelos destacados y el catálogo completo está en
+`/modelos`. La información se centraliza en `assets/models/models.js`; para agregar
+una categoría se incorpora un objeto nuevo y su vista previa, sin duplicar tarjetas
+ni páginas. Las demostraciones usan `/modelos/:slug` y se identifican expresamente
+como contenido demostrativo.
 
 Se descartaron deliberadamente los módulos exclusivos del negocio de maquillaje: tonos de piel, galería antes/después y perfil cosmético.
 

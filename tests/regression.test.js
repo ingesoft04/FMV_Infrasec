@@ -42,7 +42,8 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.match(html, /\.services-grid\s*\{[^}]*gap:\s*1rem/s);
   assert.match(html, /assets\/images\/hero-ciberseguridad\.png/);
   assert.match(html, /assets\/images\/equipo-consultoria\.png/);
-  assert.match(html, /assets\/brand\/logo-temporal\.svg/);
+  assert.match(html, /assets\/brand\/logo-dark-background\.webp/);
+  assert.match(html, /mix-blend-mode:\s*screen/);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 
@@ -53,13 +54,39 @@ test('portales, imágenes y API continúan disponibles', async () => {
     'gestion-asesorias.html',
     'assets/images/hero-ciberseguridad.png',
     'assets/images/equipo-consultoria.png',
-    'assets/brand/logo-temporal.svg',
+    'assets/brand/logo-dark-background.webp',
+    'assets/brand/logo-light-background.webp',
     'health',
     'api/productos',
     'api/consultores',
     'api/metodos-pago'
   ];
   await Promise.all(rutas.map(obtener));
+});
+
+test('el catálogo de modelos, filtros y demostraciones están conectados', async () => {
+  const main = await (await obtener('fmv-infrasec.html')).text();
+  assert.match(main, /id="modelos"/);
+  assert.match(main, /Encuentra un diseño para tu negocio/);
+  assert.match(main, /href="\/modelos"/);
+
+  const catalog = await (await obtener('modelos')).text();
+  assert.match(catalog, /data-models-search/);
+  assert.match(catalog, /data-models-filter/);
+  assert.match(catalog, /data-models-catalog/);
+
+  const data = await (await obtener('assets/models/models.js')).text();
+  for (const value of ['Psicología', 'Joyería', 'Restaurante', 'Serviteca', 'Maquillaje', 'Espacio Sereno']) {
+    assert.match(data, new RegExp(value));
+  }
+  for (const slug of ['psicologia', 'joyeria', 'restaurante', 'serviteca', 'maquillaje']) {
+    const demo = await (await obtener(`modelos/${slug}`)).text();
+    assert.match(demo, /Este es un modelo demostrativo/);
+    assert.match(demo, /Quiero este modelo/);
+    assert.match(demo, /Volver a todos los modelos/);
+  }
+  const portal = await (await obtener('portal-comercial.html?modelo=psicologia')).text();
+  assert.match(portal, /portal-interest\.js/);
 });
 
 test('archivos internos del servidor no quedan expuestos públicamente', async () => {

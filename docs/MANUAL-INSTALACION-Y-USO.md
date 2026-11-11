@@ -85,6 +85,25 @@ Consulte también `docs/ARQUITECTURA-SOLID.md`.
 | `docker-compose.test.yml` | Sobrescritura PostgreSQL exclusiva de pruebas |
 | `assets/brand/favicon.svg` | Icono mostrado en la pestaña del navegador |
 | `assets/test-environment.js` | Banner activado únicamente en dominios `test-` |
+| `assets/models/models.js` | Fuente central de modelos, categorías y enlaces |
+| `assets/models/models-ui.js` | Renderizado del inicio, catálogo y demostraciones |
+| `modelos.html` | Catálogo con búsqueda y filtro por categoría |
+| `modelo.html` | Plantilla reutilizable para `/modelos/:slug` |
+
+### 4.1 Agregar un modelo web
+
+1. Añada un objeto a `assets/models/models.js` con `id`, `nombre`, `categoria`,
+   `slug`, `descripcion`, `imagen`, `funciones`, `precio`, `tiempoEntrega`,
+   `enlaceDemostracion`, `destacado` y `mensajeWhatsApp`.
+2. Guarde una vista previa SVG optimizada en `assets/models/previews/`.
+3. Use como enlace de demostración `/modelos/<slug>`.
+4. Ejecute las pruebas; el servidor toma automáticamente los slugs desde la fuente
+   central y rechaza categorías inexistentes con HTTP `404`.
+5. Despliegue primero en test y compruebe búsqueda, filtro, demostración y botón de
+   solicitud antes de promover a producción.
+
+Los ejemplos deben identificarse como demostrativos. No publique testimonios,
+clientes, métricas ni resultados inventados.
 
 ## 5. Entornos oficiales y flujo de promoción
 
@@ -471,11 +490,19 @@ Las imágenes están en:
 assets/images/
 ```
 
-El logo está en:
+Los logos están en:
 
 ```text
 assets/brand/
 ```
+
+- `logo-dark-background.webp`: versión blanca para navegación, pie y demás fondos oscuros.
+- `logo-light-background.webp`: versión oscura para fondos claros.
+- `logo-temporal.svg`: recurso anterior conservado por compatibilidad.
+
+No intercambie las variantes: mantener el contraste correcto protege la legibilidad
+de la marca. Ambas imágenes están optimizadas en WebP y contienen símbolo, nombre y
+lema corporativo; no agregue nuevamente el nombre como texto junto al logo.
 
 El favicon corporativo es `assets/brand/favicon.svg`. Todas las páginas públicas
 deben declarar ese archivo en su `<head>`. Después de reemplazarlo, recargue el
