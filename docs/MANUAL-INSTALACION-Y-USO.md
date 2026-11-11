@@ -380,37 +380,32 @@ Si el Caddyfile se reemplaza mediante `mv`, el montaje bind del contenedor puede
 seguir apuntando al inode anterior. En ese caso se recrea exclusivamente Caddy para
 volver a montar el archivo; luego se valida HTTPS en ambos dominios.
 
-## 12. Uso del portal de clientes
+## 12. Uso del portal comercial
 
-### 12.1 Crear una cuenta
+### 12.1 Registrar una solicitud sin cuenta
 
 1. Abra el portal comercial.
-2. Seleccione **Crear cuenta**.
-3. Registre nombre, empresa, correo, teléfono y contraseña.
-4. Confirme el correo desde el enlace recibido.
-5. Inicie sesión.
+2. Registre nombre, correo, teléfono y un comentario con la necesidad.
+3. Pulse **Enviar solicitud**.
+4. Guarde el número con formato `FMV-AAAAMMDD-XXXXXXXX` que muestra el portal.
 
-### 12.2 Solicitar una asesoría
+No se solicita contraseña ni se crea una cuenta. El número utiliza una parte aleatoria
+para evitar identificadores consecutivos predecibles. Los datos personales se almacenan
+en PostgreSQL y no se devuelven al consultar públicamente el estado.
 
-1. Seleccione el producto o servicio.
-2. Seleccione consultor, fecha y hora.
-3. Indique canal, presupuesto y necesidad.
-4. Pulse **Solicitar asesoría**.
-5. Consulte el estado en **Mis asesorías**.
-6. Descargue el evento de calendario si lo necesita.
+### 12.2 Consultar una solicitud
 
-### 12.3 Cotizaciones y pagos
+1. Abra **Consultar solicitud** en el mismo portal.
+2. Escriba el número de seguimiento recibido.
+3. Pulse **Consultar estado**.
+4. El portal muestra únicamente el estado y la fecha de registro.
 
-1. Revise la cotización asignada.
-2. Descargue el PDF.
-3. Acepte o rechace la propuesta.
-4. Si la acepta, utilice el pago habilitado.
-5. Seleccione PSE, tarjeta, transferencia bancaria, Nequi, Daviplata o efectivo.
-6. Conserve la referencia generada y espere la validación del administrador.
+Estados posibles: **recibida**, **en revisión**, **contactado** y **cerrado**.
 
-El portal muestra subtotal, impuestos y total en COP. Por seguridad, nunca solicite ni escriba en el portal el número completo de una tarjeta, su fecha de vencimiento, PIN o CVV.
+Por seguridad, nunca escriba contraseñas, números de tarjeta, PIN, CVV ni otros
+secretos en el comentario. La creación pública tiene limitación de solicitudes por IP.
 
-### 12.4 Administración de valores y validación de pagos
+### 12.3 Administración de valores y validación de pagos
 
 1. Ingrese a `admin-comercial.html` con un usuario administrador.
 2. Abra **Valores** para definir el precio público “desde” de cada producto. Un campo vacío se publica como **Valor según alcance**.

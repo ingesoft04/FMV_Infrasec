@@ -13,11 +13,13 @@ const PaymentRepository = require('./repositories/PaymentRepository');
 const AdminRepository = require('./repositories/AdminRepository');
 const CommunicationRepository = require('./repositories/CommunicationRepository');
 const StaffRepository = require('./repositories/StaffRepository');
+const ContactRequestRepository = require('./repositories/ContactRequestRepository');
 const AuthService = require('./services/AuthService');
 const AppointmentService = require('./services/AppointmentService');
 const SalesService = require('./services/SalesService');
 const AdminService = require('./services/AdminService');
 const StaffService = require('./services/StaffService');
+const ContactRequestService = require('./services/ContactRequestService');
 const AuthController = require('./http/controllers/AuthController');
 const CommercialController = require('./http/controllers/CommercialController');
 const AdminController = require('./http/controllers/AdminController');
@@ -33,7 +35,8 @@ function buildContainer() {
     payments: new PaymentRepository(pool),
     admin: new AdminRepository(pool),
     communications: new CommunicationRepository(pool),
-    staff: new StaffRepository(pool)
+    staff: new StaffRepository(pool),
+    contactRequests: new ContactRequestRepository(pool)
   };
   const { enviarCorreo, enviarWhatsApp } = createCommunicationSenders(repositories.communications);
   const adapters = {
@@ -45,11 +48,12 @@ function buildContainer() {
     appointments: new AppointmentService({ appointments: repositories.appointments, catalog: repositories.catalog, users: repositories.users, notifications: adapters.notifications, documents: adapters.documents }),
     sales: new SalesService({ quotes: repositories.quotes, payments: repositories.payments, appointments: repositories.appointments, documents: adapters.documents, config })
   };
+  services.contactRequests = new ContactRequestService({ contactRequests: repositories.contactRequests });
   services.admin = new AdminService({ admin: repositories.admin, appointments: repositories.appointments, quotes: repositories.quotes, users: repositories.users, notifications: adapters.notifications, config });
   services.staff = new StaffService({ staff: repositories.staff, appointments: repositories.appointments });
   const controllers = {
     auth: new AuthController(services.auth),
-    commercial: new CommercialController({ catalog: repositories.catalog, appointments: services.appointments, sales: services.sales }),
+    commercial: new CommercialController({ catalog: repositories.catalog, appointments: services.appointments, sales: services.sales, contactRequests: services.contactRequests }),
     admin: new AdminController(services.admin),
     staff: new StaffController(services.staff)
   };

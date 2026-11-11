@@ -33,7 +33,7 @@ pruebas esté pendiente.
 ## Incluye
 
 - Catálogo de productos y servicios FMV.
-- Registro e inicio de sesión de clientes empresariales.
+- Formulario comercial público sin cuenta, con seguimiento no secuencial y consulta de estado.
 - Disponibilidad, solicitud, reprogramación y cancelación de asesorías.
 - Objetivo, canal y presupuesto estimado por oportunidad.
 - Endpoints administrativos para revisar oportunidades y actualizar su estado.
@@ -61,7 +61,11 @@ copy .env.example .env
 docker compose up --build
 ```
 
-Abra `http://localhost:4100/portal-comercial.html`. La página corporativa está disponible en `http://localhost:4100/fmv-infrasec.html`. Puede cambiar el puerto público mediante `APP_PORT`.
+Abra `http://localhost:4100/portal-comercial.html` para registrar una solicitud con nombre,
+correo, teléfono y comentario. El portal entrega un número `FMV-AAAAMMDD-XXXXXXXX`
+que permite consultar el estado sin exponer los datos personales. La página corporativa
+está disponible en `http://localhost:4100/fmv-infrasec.html`. Puede cambiar el puerto
+público mediante `APP_PORT`.
 
 El CRM administrativo está en `http://localhost:4100/admin-comercial.html`.
 
@@ -71,7 +75,7 @@ y luego cambie `BOOTSTRAP_USERS=false` y retire esas contraseñas del archivo.
 
 ## Integraciones
 
-- Sin SMTP, los correos se guardan como simulados y el portal permite probar verificación y recuperación.
+- Sin SMTP, los correos internos se guardan como simulados.
 - Sin credenciales de Meta, WhatsApp se registra como simulado y genera enlaces `wa.me`.
 - `PAYMENT_PROVIDER=local` registra pagos para validación manual; nunca los aprueba automáticamente. Para producción debe conectarse el adaptador del proveedor elegido y validar sus webhooks.
 

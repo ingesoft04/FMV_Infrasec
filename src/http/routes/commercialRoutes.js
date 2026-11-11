@@ -6,6 +6,8 @@ module.exports = (controller, authenticate) => {
   router.get('/productos', asyncHandler(controller.products));
   router.get('/consultores', asyncHandler(controller.consultants));
   router.get('/metodos-pago', asyncHandler(controller.paymentMethods));
+  router.post('/solicitudes-contacto', asyncHandler(controller.createContactRequest));
+  router.get('/solicitudes-contacto/:numero', asyncHandler(controller.contactRequestStatus));
   router.get('/asesorias/disponibilidad', authenticate, asyncHandler(controller.availability));
   router.get('/asesorias', authenticate, asyncHandler(controller.listAppointments));
   router.post('/asesorias', authenticate, asyncHandler(controller.createAppointment));

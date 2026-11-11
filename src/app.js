@@ -71,6 +71,12 @@ module.exports = (container) => {
     }
   });
   app.use('/api/auth', rateLimit({ windowMs: 15 * 60 * 1000, max: 20 }), authRoutes(container.controllers.auth));
+  app.use('/api/solicitudes-contacto', rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 12,
+    standardHeaders: true,
+    legacyHeaders: false
+  }));
   app.use('/api/admin', adminRoutes(container.controllers.admin, authenticate, adminOnly));
   app.use('/api/staff', staffRoutes(container.controllers.staff, authenticate, staffOnly, saOnly));
   app.use('/api', commercialRoutes(container.controllers.commercial, authenticate));

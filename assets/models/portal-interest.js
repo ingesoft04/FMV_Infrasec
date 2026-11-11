@@ -10,10 +10,10 @@
   label.textContent = `Interés registrado: modelo ${model.nombre}`;
   const detail = document.createElement('p');
   detail.className = 'meta';
-  detail.textContent = `Categoría ${model.categoria}. Inicia sesión o crea una cuenta para solicitar una asesoría y personalizarlo.`;
+  detail.textContent = `Categoría ${model.categoria}. Complete sus datos para que podamos orientarle y personalizarlo.`;
   notice.append(label, detail);
   document.querySelector('.layout')?.before(notice);
 
-  const objective = document.getElementById('objective');
-  if (objective && !objective.value) objective.value = model.mensajeWhatsApp;
+  const comment = document.getElementById('contactComment');
+  if (comment && !comment.value) comment.value = model.mensajeWhatsApp;
 })();
