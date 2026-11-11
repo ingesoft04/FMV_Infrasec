@@ -474,6 +474,13 @@ Revise referencia, cliente, monto, método y estado. Los estados disponibles son
 
 ## 14. Gestión de imágenes, logo y favicon
 
+La página principal utiliza una jerarquía de lectura progresiva. Inicialmente presenta
+la propuesta de valor, las soluciones prioritarias, el proceso, los modelos y los
+sectores principales. Los servicios adicionales y el contenido especializado de
+seguridad, automatización, arquitectura y stack se muestran mediante controles
+desplegables. Al modificar el HTML, conserve los atributos `data-toggle-cards`,
+`aria-expanded` y los elementos `details`/`summary` para mantener la accesibilidad.
+
 ### 14.1 Portal interno de asesores y SA
 
 Acceda a `http://localhost:4100/gestion-asesorias.html`.

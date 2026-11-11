@@ -44,6 +44,12 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.match(html, /assets\/images\/equipo-consultoria\.png/);
   assert.match(html, /assets\/brand\/logo-dark-background\.webp/);
   assert.match(html, /mix-blend-mode:\s*screen/);
+  assert.match(html, /data-toggle-cards="services"/);
+  assert.match(html, /data-toggle-cards="industries"/);
+  assert.match(html, /class="disclosure-block/);
+  assert.match(html, /aria-expanded="false"/);
+  assert.doesNotMatch(html, /href="#arquitectura"[^>]*>Arquitectura/);
+  assert.doesNotMatch(html, /class="stats-bar"/);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 

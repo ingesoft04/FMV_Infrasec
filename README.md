@@ -40,6 +40,7 @@ pruebas esté pendiente.
 - PostgreSQL, autenticación JWT, rate limiting, Docker y página web integrada.
 - Favicon corporativo y marcador visual exclusivo del entorno de pruebas.
 - Logo corporativo optimizado con variantes específicas para fondos claros y oscuros.
+- Página principal con lectura progresiva: navegación reducida, contenido prioritario y detalles técnicos desplegables.
 - Catálogo ampliable de modelos web con búsqueda, filtros y demostraciones por categoría.
 
 ## Modelos de páginas web
