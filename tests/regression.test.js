@@ -50,6 +50,8 @@ test('sitio principal conserva contenido, navegación y recursos visuales', asyn
   assert.match(html, /aria-expanded="false"/);
   assert.doesNotMatch(html, /href="#arquitectura"[^>]*>Arquitectura/);
   assert.doesNotMatch(html, /class="stats-bar"/);
+  assert.match(html, /https:\/\/wa\.me\/573025286029/);
+  assert.match(html, /aria-label="Escribir a FMV InfraSec por WhatsApp"/);
   assert.match(html, /<\/script>\s*<\/body>\s*<\/html>\s*$/);
 });
 

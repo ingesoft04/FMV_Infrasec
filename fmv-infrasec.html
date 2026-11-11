@@ -1048,6 +1048,27 @@
     cursor: pointer;
   }
   .content-toggle:hover { background: rgba(0,196,204,.12); }
+  .whatsapp-fab {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 120;
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    min-height: 48px;
+    padding: .72rem 1rem;
+    border: 1px solid rgba(255,255,255,.18);
+    border-radius: 999px;
+    background: #1f9d61;
+    color: #fff;
+    font: 700 .82rem/1 var(--font-heading);
+    text-decoration: none;
+    box-shadow: 0 12px 32px rgba(0,0,0,.34);
+    transition: transform .2s ease, background .2s ease;
+  }
+  .whatsapp-fab:hover { transform: translateY(-2px); background: #168451; }
+  .whatsapp-fab span:first-child { font-size: 1.15rem; }
   .disclosure-block {
     position: relative;
     z-index: 1;
@@ -1098,6 +1119,8 @@
     .industries-grid { grid-template-columns: repeat(2, 1fr); }
     .cta-section { padding: 6rem 2.5rem; }
     footer { padding: 2.5rem; flex-direction: column; align-items: flex-start; }
+    .whatsapp-fab { width: 48px; padding: 0; justify-content: center; }
+    .whatsapp-fab-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   }
 </style>
 </head>
@@ -1105,6 +1128,10 @@
 
 <div class="bg-mesh"></div>
 <div class="bg-grid"></div>
+
+<a class="whatsapp-fab" href="https://wa.me/573025286029?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20los%20servicios%20de%20FMV%20InfraSec." target="_blank" rel="noopener noreferrer" aria-label="Escribir a FMV InfraSec por WhatsApp">
+  <span aria-hidden="true">💬</span><span class="whatsapp-fab-label">WhatsApp</span>
+</a>
 
 <!-- NAV -->
 <nav>
@@ -1634,7 +1661,7 @@
   <p>Cuéntanos sobre tu empresa, elige el producto o servicio que necesitas y te conectamos con el consultor adecuado. Sin compromisos, sin costos ocultos.</p>
   <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
     <a href="portal-comercial.html" class="btn-primary">Agendar asesoría comercial →</a>
-    <a href="tel:+57000000000" class="btn-ghost">📞 Llamar ahora</a>
+    <a href="https://wa.me/573025286029?text=Hola%2C%20quiero%20solicitar%20una%20asesor%C3%ADa%20con%20FMV%20InfraSec." class="btn-ghost" target="_blank" rel="noopener noreferrer">💬 Escribir por WhatsApp</a>
   </div>
 </section>
 

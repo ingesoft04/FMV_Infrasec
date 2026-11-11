@@ -481,6 +481,11 @@ seguridad, automatización, arquitectura y stack se muestran mediante controles
 desplegables. Al modificar el HTML, conserve los atributos `data-toggle-cards`,
 `aria-expanded` y los elementos `details`/`summary` para mantener la accesibilidad.
 
+El canal comercial de WhatsApp se publica en formato internacional mediante
+`https://wa.me/573025286029`. La página lo presenta como botón flotante y como acción
+secundaria en la sección de contacto, ambos con un mensaje inicial y apertura segura
+en una pestaña nueva.
+
 ### 14.1 Portal interno de asesores y SA
 
 Acceda a `http://localhost:4100/gestion-asesorias.html`.
