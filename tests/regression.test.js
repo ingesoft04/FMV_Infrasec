@@ -108,16 +108,13 @@ test('archivos internos del servidor no quedan expuestos públicamente', async (
   }
 });
 
-test('precios y métodos de pago se muestran sin capturar datos sensibles', async () => {
+test('los métodos de pago siguen disponibles en el CRM y el portal no solicita datos sensibles', async () => {
   const methods = await (await obtener('api/metodos-pago')).json();
   assert.deepEqual(methods.metodos.map((method) => method.id), ['pse','tarjeta','transferencia','nequi','daviplata','efectivo']);
 
   const portal = await (await obtener('portal-comercial.html')).text();
-  assert.match(portal, /Desde \$\{money\(p\.precio_desde\)\}/);
-  assert.match(portal, /No ingrese números de tarjeta ni códigos de seguridad/);
-  assert.match(portal, /Subtotal \$\{money\(q\.subtotal/);
-  assert.match(portal, /impuestos \$\{money\(q\.impuestos/);
-  assert.match(portal, /total \$\{money\(q\.total/);
+  assert.match(portal, /No incluya contraseñas, números de tarjeta ni información confidencial/);
+  assert.doesNotMatch(portal, /CVV|fecha de vencimiento|número completo de tarjeta/);
 
   const admin = await (await obtener('admin-comercial.html')).text();
   assert.match(admin, />Valores</);
