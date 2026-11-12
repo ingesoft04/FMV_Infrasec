@@ -1,12 +1,15 @@
 class CommercialController {
-  constructor({ catalog, appointments, sales }) {
+  constructor({ catalog, appointments, sales, contactRequests }) {
     this.catalog = catalog;
     this.appointments = appointments;
     this.sales = sales;
+    this.contactRequests = contactRequests;
   }
   products = async (req, res) => res.json({ productos: await this.catalog.products(req.query.categoria) });
   consultants = async (_req, res) => res.json({ consultores: await this.catalog.consultants() });
   paymentMethods = async (_req, res) => res.json(this.sales.listPaymentMethods());
+  createContactRequest = async (req, res) => res.status(201).json(await this.contactRequests.create(req.body));
+  contactRequestStatus = async (req, res) => res.json(await this.contactRequests.status(req.params.numero));
   availability = async (req, res) => res.json(await this.appointments.availability(req.query.consultor_id, req.query.fecha));
   listAppointments = async (req, res) => res.json(await this.appointments.list(req.usuario.id));
   createAppointment = async (req, res) => res.status(201).json(await this.appointments.create(req.usuario.id, req.body));

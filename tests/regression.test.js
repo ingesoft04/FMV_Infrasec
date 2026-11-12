@@ -108,16 +108,13 @@ test('archivos internos del servidor no quedan expuestos públicamente', async (
   }
 });
 
-test('precios y métodos de pago se muestran sin capturar datos sensibles', async () => {
+test('los métodos de pago siguen disponibles en el CRM y el portal no solicita datos sensibles', async () => {
   const methods = await (await obtener('api/metodos-pago')).json();
   assert.deepEqual(methods.metodos.map((method) => method.id), ['pse','tarjeta','transferencia','nequi','daviplata','efectivo']);
 
   const portal = await (await obtener('portal-comercial.html')).text();
-  assert.match(portal, /Desde \$\{money\(p\.precio_desde\)\}/);
-  assert.match(portal, /No ingrese números de tarjeta ni códigos de seguridad/);
-  assert.match(portal, /Subtotal \$\{money\(q\.subtotal/);
-  assert.match(portal, /impuestos \$\{money\(q\.impuestos/);
-  assert.match(portal, /total \$\{money\(q\.total/);
+  assert.match(portal, /No incluya contraseñas, números de tarjeta ni información confidencial/);
+  assert.doesNotMatch(portal, /CVV|fecha de vencimiento|número completo de tarjeta/);
 
   const admin = await (await obtener('admin-comercial.html')).text();
   assert.match(admin, />Valores</);
@@ -142,14 +139,12 @@ test('el portal interno separa las funciones del asesor y del SA', async () => {
   }
 });
 
-test('el portal comercial conserva una presentación centrada y legible', async () => {
+test('el portal comercial recibe datos sin crear una cuenta y entrega seguimiento', async () => {
   const response = await obtener('portal-comercial.html');
   const html = await response.text();
-  assert.match(html, /Sistema de lectura y centrado del portal comercial/);
-  assert.match(html, /\.wrap\s*\{[^}]*width:\s*min\(1360px,[^}]*margin-inline:\s*auto/s);
-  assert.match(html, /\.layout\s*\{[^}]*width:\s*min\(1080px,\s*100%\)[^}]*margin-inline:\s*auto[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s);
-  assert.match(html, /#authCard\s*\{[^}]*width:\s*min\(620px,\s*100%\)[^}]*margin-inline:\s*auto/s);
-  assert.match(html, /\.layout > section > \.card\s*\{[^}]*width:\s*100%[^}]*margin-inline:\s*auto/s);
-  assert.match(html, /\.field input,\s*\.field select,\s*\.field textarea\s*\{[^}]*min-height:\s*50px/s);
-  assert.match(html, /@media \(max-width:\s*620px\)/);
+  for (const field of ['contactName', 'contactEmail', 'contactPhone', 'contactComment']) assert.match(html, new RegExp(`id="${field}"`));
+  assert.match(html, /\/api\/solicitudes-contacto/);
+  assert.match(html, /Número de seguimiento/);
+  assert.doesNotMatch(html, /auth\/registro|type="password"|Crear cuenta/);
+  assert.match(html, /@media\(max-width:620px\)/);
 });
